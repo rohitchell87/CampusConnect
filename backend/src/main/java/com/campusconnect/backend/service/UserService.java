@@ -5,10 +5,12 @@ import com.campusconnect.backend.dto.LoginResponse;
 import com.campusconnect.backend.dto.RegisterRequest;
 import com.campusconnect.backend.dto.RegisterResponse;
 import com.campusconnect.backend.entity.User;
+import com.campusconnect.backend.entity.UserProfile;
 import com.campusconnect.backend.exception.AccountDisabledException;
 import com.campusconnect.backend.exception.EmailAlreadyExistsException;
 import com.campusconnect.backend.exception.InvalidCredentialsException;
 import com.campusconnect.backend.exception.UserNotFoundException;
+import com.campusconnect.backend.repository.UserProfileRepository;
 import com.campusconnect.backend.repository.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -17,11 +19,16 @@ import org.springframework.stereotype.Service;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final UserProfileRepository userProfileRepository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, JwtService jwtService) {
+    public UserService(UserRepository userRepository,
+                       UserProfileRepository userProfileRepository,
+                       PasswordEncoder passwordEncoder,
+                       JwtService jwtService) {
         this.userRepository = userRepository;
+        this.userProfileRepository = userProfileRepository;
         this.passwordEncoder = passwordEncoder;
         this.jwtService = jwtService;
     }
@@ -32,21 +39,27 @@ public class UserService {
         }
 
         User user = User.builder()
-                .fullName(request.getFullName())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .gender(request.getGender())
-                .branch(request.getBranch())
-                .year(request.getYear())
                 .emailVerified(false)
                 .enabled(true)
                 .build();
 
         User savedUser = userRepository.save(user);
 
+        UserProfile profile = UserProfile.builder()
+                .fullName(request.getFullName())
+                .gender(request.getGender())
+                .branch(request.getBranch())
+                .year(request.getYear())
+                .user(savedUser)
+                .build();
+
+        userProfileRepository.save(profile);
+
         return RegisterResponse.builder()
                 .id(savedUser.getId())
-                .fullName(savedUser.getFullName())
+                .fullName(profile.getFullName())
                 .email(savedUser.getEmail())
                 .message("Registration successful")
                 .build();
@@ -69,7 +82,7 @@ public class UserService {
         return LoginResponse.builder()
                 .token(token)
                 .message("Login successful")
-                .fullName(user.getFullName())
+                .fullName(user.getProfile() != null ? user.getProfile().getFullName() : null)
                 .email(user.getEmail())
                 .build();
     }

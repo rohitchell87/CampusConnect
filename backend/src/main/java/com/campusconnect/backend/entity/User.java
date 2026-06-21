@@ -2,9 +2,11 @@ package com.campusconnect.backend.entity;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.PrePersist;
 import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
@@ -33,29 +35,20 @@ public class User implements UserDetails, Principal {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private String fullName;
-
     @Column(nullable = false, unique = true)
     private String email;
 
     @Column(nullable = false)
     private String password;
 
-    private String gender;
-
-    private String branch;
-
-    private Integer year;
-
-    private String bio;
-
-    private String profilePhotoUrl;
-
     @Builder.Default
     private Boolean emailVerified = false;
 
     @Builder.Default
     private Boolean enabled = true;
+
+    @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL, optional = true)
+    private UserProfile profile;
 
     private LocalDateTime createdAt;
 
