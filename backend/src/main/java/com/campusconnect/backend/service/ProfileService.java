@@ -46,6 +46,30 @@ public class ProfileService {
         if (request.getYear() != null) {
             profile.setYear(request.getYear());
         }
+        if (request.getHeight() != null) {
+            profile.setHeight(request.getHeight());
+        }
+        if (request.getInterestedIn() != null) {
+            profile.setInterestedIn(request.getInterestedIn());
+        }
+        if (request.getRelationshipIntent() != null) {
+            profile.setRelationshipIntent(request.getRelationshipIntent());
+        }
+        if (request.getWorkoutHabit() != null) {
+            profile.setWorkoutHabit(request.getWorkoutHabit());
+        }
+        if (request.getSmokingHabit() != null) {
+            profile.setSmokingHabit(request.getSmokingHabit());
+        }
+        if (request.getDrinkingHabit() != null) {
+            profile.setDrinkingHabit(request.getDrinkingHabit());
+        }
+        if (request.getPersonalityType() != null) {
+            profile.setPersonalityType(request.getPersonalityType());
+        }
+        if (request.getCollege() != null) {
+            profile.setCollege(request.getCollege());
+        }
         if (request.getBio() != null) {
             profile.setBio(request.getBio());
         }
@@ -68,6 +92,14 @@ public class ProfileService {
                 .gender(profile.getGender())
                 .branch(profile.getBranch())
                 .year(profile.getYear())
+                .height(profile.getHeight())
+                .interestedIn(profile.getInterestedIn())
+                .relationshipIntent(profile.getRelationshipIntent())
+                .workoutHabit(profile.getWorkoutHabit())
+                .smokingHabit(profile.getSmokingHabit())
+                .drinkingHabit(profile.getDrinkingHabit())
+                .personalityType(profile.getPersonalityType())
+                .college(profile.getCollege())
                 .bio(profile.getBio())
                 .hometown(profile.getHometown())
                 .profilePhoto(profile.getProfilePhoto())

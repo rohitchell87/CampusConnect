@@ -1,6 +1,13 @@
 package com.campusconnect.backend.dto;
 
+import com.campusconnect.backend.entity.Gender;
+import com.campusconnect.backend.entity.InterestedIn;
+import com.campusconnect.backend.entity.PersonalityType;
+import com.campusconnect.backend.entity.RelationshipIntent;
 import com.campusconnect.backend.entity.LookingFor;
+import com.campusconnect.backend.entity.SmokingHabit;
+import com.campusconnect.backend.entity.DrinkingHabit;
+import com.campusconnect.backend.entity.WorkoutHabit;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -16,9 +23,17 @@ public class UpdateProfileRequest {
 
     private String fullName;
     private Integer age;
-    private String gender;
+    private Gender gender;
     private String branch;
     private Integer year;
+    private Integer height;
+    private InterestedIn interestedIn;
+    private RelationshipIntent relationshipIntent;
+    private WorkoutHabit workoutHabit;
+    private SmokingHabit smokingHabit;
+    private DrinkingHabit drinkingHabit;
+    private PersonalityType personalityType;
+    private String college;
     private String bio;
     private String hometown;
     private LookingFor lookingFor;

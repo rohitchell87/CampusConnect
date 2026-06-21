@@ -40,11 +40,34 @@ public class UserProfile {
 
     private Integer age;
 
-    private String gender;
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
 
     private String branch;
 
     private Integer year;
+
+    private Integer height;
+
+    @Enumerated(EnumType.STRING)
+    private InterestedIn interestedIn;
+
+    @Enumerated(EnumType.STRING)
+    private RelationshipIntent relationshipIntent;
+
+    @Enumerated(EnumType.STRING)
+    private WorkoutHabit workoutHabit;
+
+    @Enumerated(EnumType.STRING)
+    private SmokingHabit smokingHabit;
+
+    @Enumerated(EnumType.STRING)
+    private DrinkingHabit drinkingHabit;
+
+    @Enumerated(EnumType.STRING)
+    private PersonalityType personalityType;
+
+    private String college;
 
     private String bio;
 

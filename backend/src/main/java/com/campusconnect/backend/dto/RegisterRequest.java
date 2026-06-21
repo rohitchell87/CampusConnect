@@ -1,5 +1,6 @@
 package com.campusconnect.backend.dto;
 
+import com.campusconnect.backend.entity.Gender;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -28,7 +29,7 @@ public class RegisterRequest {
     @Size(min = 8, message = "Password must be at least 8 characters")
     private String password;
 
-    private String gender;
+    private Gender gender;
 
     private String branch;
 
