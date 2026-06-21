@@ -1,5 +1,5 @@
 package com.campusconnect.backend.entity;
-
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -32,5 +32,6 @@ public class Interest {
     private String icon;
 
     @ManyToMany(mappedBy = "interests")
-    private Set<UserProfile> profiles = new HashSet<>();
+@JsonIgnore
+private Set<UserProfile> profiles;
 }
