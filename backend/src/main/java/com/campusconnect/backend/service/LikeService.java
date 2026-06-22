@@ -3,6 +3,10 @@ package com.campusconnect.backend.service;
 import com.campusconnect.backend.entity.Match;
 import com.campusconnect.backend.entity.User;
 import com.campusconnect.backend.entity.UserLike;
+import com.campusconnect.backend.exception.AlreadyLikedException;
+import com.campusconnect.backend.exception.ChatNotAllowedException;
+import com.campusconnect.backend.exception.MessageNotFoundException;
+import com.campusconnect.backend.exception.UserNotFoundException;
 import com.campusconnect.backend.repository.MatchRepository;
 import com.campusconnect.backend.repository.UserLikeRepository;
 import com.campusconnect.backend.repository.UserRepository;
@@ -27,14 +31,14 @@ public class LikeService {
     @Transactional
     public void likeUser(User sender, Long receiverId) {
         if (sender.getId().equals(receiverId)) {
-            throw new RuntimeException("You cannot like yourself.");
+            throw new ChatNotAllowedException("Users are not matched.");
         }
 
         User receiver = userRepository.findById(receiverId)
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         if (userLikeRepository.existsBySenderAndReceiver(sender, receiver)) {
-            throw new RuntimeException("User already liked.");
+            throw new AlreadyLikedException("User already liked.");
         }
 
         UserLike like = UserLike.builder()
@@ -76,6 +80,6 @@ public class LikeService {
             return;
         }
 
-        throw new RuntimeException("Like not found.");
+        throw new MessageNotFoundException("Message not found");
     }
 }

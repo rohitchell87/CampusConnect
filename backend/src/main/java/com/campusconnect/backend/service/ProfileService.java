@@ -6,6 +6,8 @@ import com.campusconnect.backend.entity.User;
 import com.campusconnect.backend.entity.UserProfile;
 import com.campusconnect.backend.exception.UserNotFoundException;
 import com.campusconnect.backend.repository.UserProfileRepository;
+import com.campusconnect.backend.service.CloudinaryService;
+import org.springframework.web.multipart.MultipartFile;
 import com.campusconnect.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +16,12 @@ public class ProfileService {
 
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
+    private final CloudinaryService cloudinaryService;
 
-    public ProfileService(UserRepository userRepository, UserProfileRepository userProfileRepository) {
+    public ProfileService(UserRepository userRepository, UserProfileRepository userProfileRepository, CloudinaryService cloudinaryService) {
         this.userRepository = userRepository;
         this.userProfileRepository = userProfileRepository;
+        this.cloudinaryService = cloudinaryService;
     }
 
     public ProfileResponse getMyProfile(User authenticatedUser) {
@@ -106,5 +110,21 @@ public class ProfileService {
                 .coverPhoto(profile.getCoverPhoto())
                 .lookingFor(profile.getLookingFor())
                 .build();
+    }
+
+    public ProfileResponse uploadProfilePhoto(User authenticatedUser, MultipartFile file) {
+        System.out.println("===== PROFILE PHOTO ENDPOINT HIT =====");
+        UserProfile profile = userProfileRepository.findByUser(authenticatedUser)
+                .orElseThrow(() -> new UserNotFoundException("User profile not found"));
+
+        String existing = profile.getProfilePhoto();
+        if (existing != null && !existing.isBlank()) {
+            cloudinaryService.deleteImage(existing);
+        }
+
+        String url = cloudinaryService.uploadImage(file);
+        profile.setProfilePhoto(url);
+        UserProfile saved = userProfileRepository.save(profile);
+        return mapToResponse(saved);
     }
 }

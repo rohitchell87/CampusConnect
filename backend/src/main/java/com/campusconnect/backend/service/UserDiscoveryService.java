@@ -10,6 +10,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -21,13 +24,12 @@ public class UserDiscoveryService {
         this.userProfileRepository = userProfileRepository;
     }
 
-    public List<DiscoverUserResponse> discoverUsers(User authenticatedUser) {
+    public Page<DiscoverUserResponse> discoverUsers(User authenticatedUser, Pageable pageable) {
         UserProfile me = userProfileRepository.findByUser(authenticatedUser)
                 .orElseThrow(() -> new UserNotFoundException("User profile not found"));
 
-        List<UserProfile> others = userProfileRepository.findByUserIdNot(authenticatedUser.getId());
-
-        return others.stream()
+        List<UserProfile> others = userProfileRepository.findByUserIdNot(authenticatedUser.getId(), Pageable.unpaged()).getContent();
+        List<DiscoverUserResponse> sortedResponses = others.stream()
                 .map(profile -> {
                     Set<Interest> myInterests = me.getInterests() != null ? me.getInterests() : Collections.emptySet();
                     Set<Interest> theirInterests = profile.getInterests() != null ? profile.getInterests() : Collections.emptySet();
@@ -37,6 +39,11 @@ public class UserDiscoveryService {
                 .sorted((e1, e2) -> Integer.compare(e2.getValue(), e1.getValue()))
                 .map(entry -> mapToResponse(entry.getKey(), entry.getValue()))
                 .collect(Collectors.toList());
+
+        int start = (int) pageable.getOffset();
+        int end = Math.min((start + pageable.getPageSize()), sortedResponses.size());
+        List<DiscoverUserResponse> pageContent = start > sortedResponses.size() ? List.of() : sortedResponses.subList(start, end);
+        return new PageImpl<>(pageContent, pageable, sortedResponses.size());
     }
 
     private DiscoverUserResponse mapToResponse(UserProfile profile, int sharedInterests) {

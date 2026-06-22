@@ -6,6 +6,8 @@ import com.campusconnect.backend.entity.ChatRoom;
 import com.campusconnect.backend.entity.Match;
 import com.campusconnect.backend.entity.Message;
 import com.campusconnect.backend.entity.User;
+import com.campusconnect.backend.exception.ChatNotAllowedException;
+import com.campusconnect.backend.exception.UserNotFoundException;
 import com.campusconnect.backend.repository.ChatRoomRepository;
 import com.campusconnect.backend.repository.MatchRepository;
 import com.campusconnect.backend.repository.MessageRepository;
@@ -43,7 +45,7 @@ public class ChatService {
         }
 
         if (match.isEmpty()) {
-            throw new RuntimeException("Users are not matched.");
+            throw new ChatNotAllowedException("Users are not matched.");
         }
 
         final Match finalMatch = match.get();
@@ -84,7 +86,7 @@ public class ChatService {
         }
 
         if (match.isEmpty()) {
-            throw new RuntimeException("Users are not matched.");
+            throw new ChatNotAllowedException("Users are not matched.");
         }
 
         Optional<ChatRoom> chatRoom = chatRoomRepository.findByMatch(match.get());

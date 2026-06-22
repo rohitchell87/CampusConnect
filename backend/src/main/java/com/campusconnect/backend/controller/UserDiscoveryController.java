@@ -3,7 +3,8 @@ package com.campusconnect.backend.controller;
 import com.campusconnect.backend.dto.DiscoverUserResponse;
 import com.campusconnect.backend.entity.User;
 import com.campusconnect.backend.service.UserDiscoveryService;
-import java.util.List;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -21,9 +22,9 @@ public class UserDiscoveryController {
     }
 
     @GetMapping("/discover")
-    public ResponseEntity<List<DiscoverUserResponse>> discover(Authentication authentication) {
+    public ResponseEntity<Page<DiscoverUserResponse>> discover(Authentication authentication, Pageable pageable) {
         User user = (User) authentication.getPrincipal();
-        List<DiscoverUserResponse> results = userDiscoveryService.discoverUsers(user);
+        Page<DiscoverUserResponse> results = userDiscoveryService.discoverUsers(user, pageable);
         return ResponseEntity.ok(results);
     }
 }
