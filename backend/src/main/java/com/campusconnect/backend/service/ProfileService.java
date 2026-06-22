@@ -113,7 +113,6 @@ public class ProfileService {
     }
 
     public ProfileResponse uploadProfilePhoto(User authenticatedUser, MultipartFile file) {
-        System.out.println("===== PROFILE PHOTO ENDPOINT HIT =====");
         UserProfile profile = userProfileRepository.findByUser(authenticatedUser)
                 .orElseThrow(() -> new UserNotFoundException("User profile not found"));
 
@@ -124,6 +123,21 @@ public class ProfileService {
 
         String url = cloudinaryService.uploadImage(file);
         profile.setProfilePhoto(url);
+        UserProfile saved = userProfileRepository.save(profile);
+        return mapToResponse(saved);
+    }
+
+    public ProfileResponse uploadCoverPhoto(User authenticatedUser, MultipartFile file) {
+        UserProfile profile = userProfileRepository.findByUser(authenticatedUser)
+                .orElseThrow(() -> new UserNotFoundException("User profile not found"));
+
+        String existing = profile.getCoverPhoto();
+        if (existing != null && !existing.isBlank()) {
+            cloudinaryService.deleteImage(existing);
+        }
+
+        String url = cloudinaryService.uploadImage(file);
+        profile.setCoverPhoto(url);
         UserProfile saved = userProfileRepository.save(profile);
         return mapToResponse(saved);
     }
