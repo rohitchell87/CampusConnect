@@ -1,23 +1,19 @@
-import { Routes, Route } from 'react-router-dom';
-import Layout from './layouts/Layout';
-import Landing from './pages/Landing';
-import Login from './pages/Login';
-import Register from './pages/Register';
-import Dashboard from './pages/Dashboard';
-import Profile from './pages/Profile';
+import React from 'react'
+import AppRoutes from './routes/AppRoutes'
+import Navbar from './components/layout/Navbar'
+import Footer from './components/layout/Footer'
+import ErrorBoundary from './components/common/ErrorBoundary'
 
-function App() {
+export default function App() {
   return (
-    <Layout>
-      <Routes>
-        <Route path="/" element={<Landing />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-        <Route path="/dashboard" element={<Dashboard />} />
-        <Route path="/profile" element={<Profile />} />
-      </Routes>
-    </Layout>
-  );
+    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
+      <Navbar />
+      <main className="flex-1 container mx-auto px-4 py-8">
+        <ErrorBoundary>
+          <AppRoutes />
+        </ErrorBoundary>
+      </main>
+      <Footer />
+    </div>
+  )
 }
-
-export default App;

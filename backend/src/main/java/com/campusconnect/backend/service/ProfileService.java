@@ -1,7 +1,9 @@
 package com.campusconnect.backend.service;
 
+import com.campusconnect.backend.dto.InterestResponse;
 import com.campusconnect.backend.dto.ProfileResponse;
 import com.campusconnect.backend.dto.UpdateProfileRequest;
+import com.campusconnect.backend.entity.Interest;
 import com.campusconnect.backend.entity.User;
 import com.campusconnect.backend.entity.UserProfile;
 import com.campusconnect.backend.exception.UserNotFoundException;
@@ -10,6 +12,9 @@ import com.campusconnect.backend.service.CloudinaryService;
 import org.springframework.web.multipart.MultipartFile;
 import com.campusconnect.backend.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import java.util.Collections;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class ProfileService {
@@ -109,6 +114,24 @@ public class ProfileService {
                 .profilePhoto(profile.getProfilePhoto())
                 .coverPhoto(profile.getCoverPhoto())
                 .lookingFor(profile.getLookingFor())
+                .interests(mapInterests(profile.getInterests()))
+                .build();
+    }
+
+    private Set<InterestResponse> mapInterests(Set<Interest> interests) {
+        if (interests == null || interests.isEmpty()) {
+            return Collections.emptySet();
+        }
+        return interests.stream()
+                .map(this::mapInterest)
+                .collect(Collectors.toSet());
+    }
+
+    private InterestResponse mapInterest(Interest interest) {
+        return InterestResponse.builder()
+                .id(interest.getId())
+                .name(interest.getName())
+                .icon(interest.getIcon())
                 .build();
     }
 

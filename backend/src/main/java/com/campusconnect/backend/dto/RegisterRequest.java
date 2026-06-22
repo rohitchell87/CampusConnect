@@ -35,7 +35,6 @@ public class RegisterRequest {
 
     private String branch;
 
-    @NotNull(message = "Year is required")
     @Min(value = 1, message = "Year must be at least 1")
     private Integer year;
 }

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
@@ -13,6 +15,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<Map<String, Object>> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
@@ -77,6 +81,7 @@ public class GlobalExceptionHandler {
         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
         for (FieldError error : fieldErrors) {
             errors.put(error.getField(), error.getDefaultMessage());
+            logger.warn("Validation failed for field '{}': rejectedValue='{}', message='{}'", error.getField(), error.getRejectedValue(), error.getDefaultMessage());
         }
 
         body.put("message", "Validation failed");

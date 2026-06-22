@@ -1,5 +1,6 @@
 package com.campusconnect.backend.dto;
 
+import com.campusconnect.backend.dto.InterestResponse;
 import com.campusconnect.backend.entity.DrinkingHabit;
 import com.campusconnect.backend.entity.Gender;
 import com.campusconnect.backend.entity.InterestedIn;
@@ -8,6 +9,7 @@ import com.campusconnect.backend.entity.PersonalityType;
 import com.campusconnect.backend.entity.RelationshipIntent;
 import com.campusconnect.backend.entity.SmokingHabit;
 import com.campusconnect.backend.entity.WorkoutHabit;
+import java.util.Set;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -40,4 +42,5 @@ public class ProfileResponse {
     private String profilePhoto;
     private String coverPhoto;
     private LookingFor lookingFor;
+    private Set<InterestResponse> interests;
 }

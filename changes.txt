@@ -1,0 +1,1004 @@
+diff --git a/backend/src/main/java/com/campusconnect/backend/dto/ProfileResponse.java b/backend/src/main/java/com/campusconnect/backend/dto/ProfileResponse.java
+index dac2393..b61a302 100644
+--- a/backend/src/main/java/com/campusconnect/backend/dto/ProfileResponse.java
++++ b/backend/src/main/java/com/campusconnect/backend/dto/ProfileResponse.java
+@@ -1,5 +1,6 @@
+ package com.campusconnect.backend.dto;
+ 
++import com.campusconnect.backend.dto.InterestResponse;
+ import com.campusconnect.backend.entity.DrinkingHabit;
+ import com.campusconnect.backend.entity.Gender;
+ import com.campusconnect.backend.entity.InterestedIn;
+@@ -8,6 +9,7 @@ import com.campusconnect.backend.entity.PersonalityType;
+ import com.campusconnect.backend.entity.RelationshipIntent;
+ import com.campusconnect.backend.entity.SmokingHabit;
+ import com.campusconnect.backend.entity.WorkoutHabit;
++import java.util.Set;
+ import lombok.AllArgsConstructor;
+ import lombok.Builder;
+ import lombok.Getter;
+@@ -40,4 +42,5 @@ public class ProfileResponse {
+     private String profilePhoto;
+     private String coverPhoto;
+     private LookingFor lookingFor;
++    private Set<InterestResponse> interests;
+ }
+diff --git a/backend/src/main/java/com/campusconnect/backend/dto/RegisterRequest.java b/backend/src/main/java/com/campusconnect/backend/dto/RegisterRequest.java
+index 724fdc3..05dc5aa 100644
+--- a/backend/src/main/java/com/campusconnect/backend/dto/RegisterRequest.java
++++ b/backend/src/main/java/com/campusconnect/backend/dto/RegisterRequest.java
+@@ -35,7 +35,6 @@ public class RegisterRequest {
+ 
+     private String branch;
+ 
+-    @NotNull(message = "Year is required")
+     @Min(value = 1, message = "Year must be at least 1")
+     private Integer year;
+ }
+diff --git a/backend/src/main/java/com/campusconnect/backend/exception/GlobalExceptionHandler.java b/backend/src/main/java/com/campusconnect/backend/exception/GlobalExceptionHandler.java
+index bb4abe0..e5bdd55 100644
+--- a/backend/src/main/java/com/campusconnect/backend/exception/GlobalExceptionHandler.java
++++ b/backend/src/main/java/com/campusconnect/backend/exception/GlobalExceptionHandler.java
+@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
+ import java.util.LinkedHashMap;
+ import java.util.List;
+ import java.util.Map;
++import org.slf4j.Logger;
++import org.slf4j.LoggerFactory;
+ import org.springframework.http.HttpStatus;
+ import org.springframework.http.ResponseEntity;
+ import org.springframework.validation.FieldError;
+@@ -14,6 +16,8 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
+ @RestControllerAdvice
+ public class GlobalExceptionHandler {
+ 
++    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
++
+     @ExceptionHandler(EmailAlreadyExistsException.class)
+     public ResponseEntity<Map<String, Object>> handleEmailAlreadyExists(EmailAlreadyExistsException ex) {
+         return buildResponseBody(ex.getMessage(), HttpStatus.CONFLICT);
+@@ -77,6 +81,7 @@ public class GlobalExceptionHandler {
+         List<FieldError> fieldErrors = ex.getBindingResult().getFieldErrors();
+         for (FieldError error : fieldErrors) {
+             errors.put(error.getField(), error.getDefaultMessage());
++            logger.warn("Validation failed for field '{}': rejectedValue='{}', message='{}'", error.getField(), error.getRejectedValue(), error.getDefaultMessage());
+         }
+ 
+         body.put("message", "Validation failed");
+diff --git a/backend/src/main/java/com/campusconnect/backend/security/SecurityConfig.java b/backend/src/main/java/com/campusconnect/backend/security/SecurityConfig.java
+index ce8d142..7d6a737 100644
+--- a/backend/src/main/java/com/campusconnect/backend/security/SecurityConfig.java
++++ b/backend/src/main/java/com/campusconnect/backend/security/SecurityConfig.java
+@@ -1,5 +1,5 @@
+ package com.campusconnect.backend.security;
+-
++import org.springframework.security.config.Customizer;
+ import org.springframework.context.annotation.Bean;
+ import org.springframework.context.annotation.Configuration;
+ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+@@ -28,7 +28,8 @@ public class SecurityConfig {
+     @Bean
+     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+         http
+-                .csrf().disable()
++        .cors(Customizer.withDefaults())
++        .csrf(csrf -> csrf.disable())
+                 .authorizeHttpRequests(authorize -> authorize
+                         .requestMatchers("/api/auth/register", "/api/auth/login").permitAll()
+                         .anyRequest().authenticated()
+diff --git a/backend/src/main/java/com/campusconnect/backend/service/MatchService.java b/backend/src/main/java/com/campusconnect/backend/service/MatchService.java
+index f0f325d..6a0b359 100644
+--- a/backend/src/main/java/com/campusconnect/backend/service/MatchService.java
++++ b/backend/src/main/java/com/campusconnect/backend/service/MatchService.java
+@@ -1,5 +1,4 @@
+ package com.campusconnect.backend.service;
+-
+ import com.campusconnect.backend.dto.MatchResponse;
+ import com.campusconnect.backend.entity.Match;
+ import com.campusconnect.backend.entity.User;
+diff --git a/backend/src/main/java/com/campusconnect/backend/service/ProfileService.java b/backend/src/main/java/com/campusconnect/backend/service/ProfileService.java
+index f89a6f1..d845682 100644
+--- a/backend/src/main/java/com/campusconnect/backend/service/ProfileService.java
++++ b/backend/src/main/java/com/campusconnect/backend/service/ProfileService.java
+@@ -1,7 +1,9 @@
+ package com.campusconnect.backend.service;
+ 
++import com.campusconnect.backend.dto.InterestResponse;
+ import com.campusconnect.backend.dto.ProfileResponse;
+ import com.campusconnect.backend.dto.UpdateProfileRequest;
++import com.campusconnect.backend.entity.Interest;
+ import com.campusconnect.backend.entity.User;
+ import com.campusconnect.backend.entity.UserProfile;
+ import com.campusconnect.backend.exception.UserNotFoundException;
+@@ -10,6 +12,9 @@ import com.campusconnect.backend.service.CloudinaryService;
+ import org.springframework.web.multipart.MultipartFile;
+ import com.campusconnect.backend.repository.UserRepository;
+ import org.springframework.stereotype.Service;
++import java.util.Collections;
++import java.util.Set;
++import java.util.stream.Collectors;
+ 
+ @Service
+ public class ProfileService {
+@@ -109,6 +114,24 @@ public class ProfileService {
+                 .profilePhoto(profile.getProfilePhoto())
+                 .coverPhoto(profile.getCoverPhoto())
+                 .lookingFor(profile.getLookingFor())
++                .interests(mapInterests(profile.getInterests()))
++                .build();
++    }
++
++    private Set<InterestResponse> mapInterests(Set<Interest> interests) {
++        if (interests == null || interests.isEmpty()) {
++            return Collections.emptySet();
++        }
++        return interests.stream()
++                .map(this::mapInterest)
++                .collect(Collectors.toSet());
++    }
++
++    private InterestResponse mapInterest(Interest interest) {
++        return InterestResponse.builder()
++                .id(interest.getId())
++                .name(interest.getName())
++                .icon(interest.getIcon())
+                 .build();
+     }
+ 
+diff --git a/frontend/README.md b/frontend/README.md
+index 35c6655..5c8011b 100644
+--- a/frontend/README.md
++++ b/frontend/README.md
+@@ -1,23 +1,50 @@
+-# CampusConnect Frontend
++# CampusConnect Frontend (Vite + React)
+ 
+-This frontend is built with Vite, React, TailwindCSS, React Router, and Axios.
++This is the frontend for CampusConnect built with Vite, React, Tailwind CSS, and React Router.
+ 
+-## Setup
+-
+-Install dependencies:
++## Quick start
+ 
+ ```bash
+-cd frontend
++cd frontend-campusconnect
+ npm install
++npm run dev
++```
++
++## Environment
++
++Create a `.env` file at the project root with:
++
++```env
++VITE_API_BASE=http://localhost:8080
++```
++
++This URL should point to your backend server.
++
++## Build
++
++```bash
++npm run build
+ ```
+ 
+-Run development server:
++## Preview
+ 
+ ```bash
+-npm run dev
++npm run preview
+ ```
+ 
+-## Notes
++## Deployment notes
++
++- This site is ready for static hosting. Vercel or Netlify are good options.
++- Set `VITE_API_BASE` in production to your backend endpoint.
++- Ensure the backend supports CORS from the frontend domain.
++
++## Features
+ 
+-- API integration is prepared for the backend at `http://localhost:8080`.
+-- Authentication flows are scaffolded, but the login/register UI does not yet persist JWT tokens.
++- JWT authentication
++- Protected routes
++- Profile photo and cover upload with progress
++- Discovery pagination and like/skip actions
++- Matches list with chat integration
++- Dark/light theme toggle
++- Error boundary and 404 page
++- Responsive UI with skeleton loaders
+diff --git a/frontend/index.html b/frontend/index.html
+index 20c3448..b22260f 100644
+--- a/frontend/index.html
++++ b/frontend/index.html
+@@ -1,12 +1,12 @@
+-<!DOCTYPE html>
++<!doctype html>
+ <html lang="en">
+   <head>
+-    <meta charset="UTF-8" />
++    <meta charset="utf-8" />
+     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+     <title>CampusConnect</title>
+   </head>
+-  <body class="bg-slate-950 text-slate-100">
++  <body>
+     <div id="root"></div>
+     <script type="module" src="/src/main.jsx"></script>
+   </body>
+-</html>
++  </html>
+diff --git a/frontend/package.json b/frontend/package.json
+index 9e2c82f..99a1e89 100644
+--- a/frontend/package.json
++++ b/frontend/package.json
+@@ -1,25 +1,26 @@
+ {
+   "name": "campusconnect-frontend",
++  "version": "0.1.0",
+   "private": true,
+-  "version": "0.0.1",
+-  "type": "module",
+   "scripts": {
+     "dev": "vite",
+     "build": "vite build",
+     "preview": "vite preview"
+   },
+   "dependencies": {
+-    "axios": "^1.6.4",
+-    "react": "^18.3.1",
+-    "react-dom": "^18.3.1",
+-    "react-router-dom": "^6.16.0"
++    "axios": "^1.4.0",
++    "react": "^19.0.0",
++    "react-dom": "^19.0.0",
++    "react-hook-form": "^7.45.1",
++    "react-hot-toast": "^2.4.0",
++    "react-icons": "^4.9.0",
++    "react-router-dom": "^6.14.1"
+   },
+   "devDependencies": {
+-    "@tailwindcss/forms": "^0.5.4",
+-    "@vitejs/plugin-react": "^4.3.1",
+-    "autoprefixer": "^10.4.19",
+-    "postcss": "^8.4.40",
+-    "tailwindcss": "^3.4.5",
+-    "vite": "^5.4.1"
++    "autoprefixer": "^10.4.14",
++    "postcss": "^8.4.26",
++    "tailwindcss": "^3.4.4",
++    "vite": "^5.1.0",
++    "@vitejs/plugin-react": "^5.1.0"
+   }
+ }
+diff --git a/frontend/postcss.config.js b/frontend/postcss.config.js
+deleted file mode 100644
+index 2aa7205..0000000
+--- a/frontend/postcss.config.js
++++ /dev/null
+@@ -1,6 +0,0 @@
+-export default {
+-  plugins: {
+-    tailwindcss: {},
+-    autoprefixer: {},
+-  },
+-};
+diff --git a/frontend/src/App.jsx b/frontend/src/App.jsx
+index 3caa192..a171e45 100644
+--- a/frontend/src/App.jsx
++++ b/frontend/src/App.jsx
+@@ -1,23 +1,19 @@
+-import { Routes, Route } from 'react-router-dom';
+-import Layout from './layouts/Layout';
+-import Landing from './pages/Landing';
+-import Login from './pages/Login';
+-import Register from './pages/Register';
+-import Dashboard from './pages/Dashboard';
+-import Profile from './pages/Profile';
++import React from 'react'
++import AppRoutes from './routes/AppRoutes'
++import Navbar from './components/layout/Navbar'
++import Footer from './components/layout/Footer'
++import ErrorBoundary from './components/common/ErrorBoundary'
+ 
+-function App() {
++export default function App() {
+   return (
+-    <Layout>
+-      <Routes>
+-        <Route path="/" element={<Landing />} />
+-        <Route path="/login" element={<Login />} />
+-        <Route path="/register" element={<Register />} />
+-        <Route path="/dashboard" element={<Dashboard />} />
+-        <Route path="/profile" element={<Profile />} />
+-      </Routes>
+-    </Layout>
+-  );
++    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
++      <Navbar />
++      <main className="flex-1 container mx-auto px-4 py-8">
++        <ErrorBoundary>
++          <AppRoutes />
++        </ErrorBoundary>
++      </main>
++      <Footer />
++    </div>
++  )
+ }
+-
+-export default App;
+diff --git a/frontend/src/components/Navbar.jsx b/frontend/src/components/Navbar.jsx
+deleted file mode 100644
+index b2fd744..0000000
+--- a/frontend/src/components/Navbar.jsx
++++ /dev/null
+@@ -1,43 +0,0 @@
+-import { Link, NavLink } from 'react-router-dom';
+-
+-const navItems = [
+-  { label: 'Home', to: '/' },
+-  { label: 'Dashboard', to: '/dashboard' },
+-  { label: 'Profile', to: '/profile' },
+-];
+-
+-function Navbar() {
+-  return (
+-    <header className="glass-card sticky top-0 z-50 mx-auto mb-8 w-full max-w-7xl rounded-3xl border border-white/10 px-6 py-4 backdrop-blur-xl">
+-      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+-        <Link className="text-2xl font-semibold tracking-tight text-white" to="/">
+-          CampusConnect
+-        </Link>
+-
+-        <nav className="flex flex-wrap items-center gap-4 text-slate-300">
+-          {navItems.map((item) => (
+-            <NavLink
+-              key={item.to}
+-              to={item.to}
+-              className={({ isActive }) =>
+-                isActive
+-                  ? 'rounded-full bg-slate-800 px-4 py-2 text-white transition'
+-                  : 'rounded-full px-4 py-2 text-slate-300 transition hover:bg-slate-800 hover:text-white'
+-              }
+-            >
+-              {item.label}
+-            </NavLink>
+-          ))}
+-          <Link
+-            to="/login"
+-            className="rounded-full bg-slate-700 px-4 py-2 text-sm font-medium text-white transition hover:bg-slate-600"
+-          >
+-            Login
+-          </Link>
+-        </nav>
+-      </div>
+-    </header>
+-  );
+-}
+-
+-export default Navbar;
+diff --git a/frontend/src/context/AuthContext.jsx b/frontend/src/context/AuthContext.jsx
+index 3718a41..47cc9a7 100644
+--- a/frontend/src/context/AuthContext.jsx
++++ b/frontend/src/context/AuthContext.jsx
+@@ -1,13 +1,95 @@
+-import { createContext, useContext, useState } from 'react';
++import React, { createContext, useState, useEffect } from 'react'
++import api from '../api/axios'
++import profileService from '../services/profileService'
++import { useNavigate } from 'react-router-dom'
++import toast from 'react-hot-toast'
+ 
+-const AuthContext = createContext(null);
++export const AuthContext = createContext(null)
+ 
+-export function AuthProvider({ children }) {
+-  const [user, setUser] = useState(null);
++export function AuthProvider({ children }){
++  const navigate = useNavigate()
++  const [token, setToken] = useState(() => localStorage.getItem('cc_token'))
++  const [user, setUser] = useState(null)
++  const [loading, setLoading] = useState(false)
++  const [profileLoading, setProfileLoading] = useState(false)
+ 
+-  return <AuthContext.Provider value={{ user, setUser }}>{children}</AuthContext.Provider>;
+-}
++  useEffect(()=>{
++    if(token){
++      api.defaults.headers.common['Authorization'] = `Bearer ${token}`
++    } else {
++      delete api.defaults.headers.common['Authorization']
++    }
++  }, [token])
++
++  useEffect(()=>{
++    const loadProfile = async () => {
++      if (!token) return
++      setProfileLoading(true)
++      try{
++        const profile = await profileService.getMyProfile()
++        setUser(profile)
++      }catch(err){
++        console.error('Failed to load profile', err)
++        logout()
++      }finally{
++        setProfileLoading(false)
++      }
++    }
++
++    loadProfile()
++  }, [token])
++
++  const isProfileComplete = (profile) => {
++    return !!profile && !!profile.profilePhoto && !!profile.coverPhoto && Array.isArray(profile.interests) && profile.interests.length > 0
++  }
++
++  const login = async (credentials) => {
++    setLoading(true)
++    try{
++      const res = await api.post('/api/auth/login', credentials)
++      const jwt = res.data.token || res.data.accessToken || res.data.access_token || res.data.jwt
++      if(!jwt) throw new Error('No token in response')
++      localStorage.setItem('cc_token', jwt)
++      setToken(jwt)
++      api.defaults.headers.common['Authorization'] = `Bearer ${jwt}`
++      const profile = await profileService.getMyProfile()
++      setUser(profile)
++      toast.success('Logged in')
++      navigate(isProfileComplete(profile) ? '/discover' : '/complete-profile')
++    }catch(err){
++      const msg = err?.response?.data?.message || err?.response?.data || err.message || 'Login failed'
++      toast.error(msg)
++      throw err
++    }finally{ setLoading(false) }
++  }
++
++  const register = async (payload) => {
++    setLoading(true)
++    try{
++      const res = await api.post('/api/auth/register', payload)
++      toast.success('Registered successfully. Please login.')
++      navigate('/login')
++      return res.data
++    }catch(err){
++      const msg = err?.response?.data?.message || err?.response?.data || err.message || 'Register failed'
++      toast.error(msg)
++      throw err
++    }finally{ setLoading(false) }
++  }
++
++  const logout = ()=>{
++    localStorage.removeItem('cc_token')
++    setToken(null)
++    setUser(null)
++    delete api.defaults.headers.common['Authorization']
++    navigate('/login')
++  }
++
++  const isAuthenticated = () => !!token
+ 
+-export function useAuth() {
+-  return useContext(AuthContext);
++  return (
++    <AuthContext.Provider value={{ token, user, setUser, loading, profileLoading, login, logout, register, isAuthenticated, isProfileComplete }}>
++      {children}
++    </AuthContext.Provider>
++  )
+ }
+diff --git a/frontend/src/hooks/useFetch.js b/frontend/src/hooks/useFetch.js
+deleted file mode 100644
+index 02b4b83..0000000
+--- a/frontend/src/hooks/useFetch.js
++++ /dev/null
+@@ -1,19 +0,0 @@
+-import { useEffect, useState } from 'react';
+-import api from '../services/api';
+-
+-export function useFetch(url) {
+-  const [data, setData] = useState(null);
+-  const [loading, setLoading] = useState(true);
+-  const [error, setError] = useState(null);
+-
+-  useEffect(() => {
+-    setLoading(true);
+-
+-    api.get(url)
+-      .then((response) => setData(response.data))
+-      .catch((err) => setError(err))
+-      .finally(() => setLoading(false));
+-  }, [url]);
+-
+-  return { data, loading, error };
+-}
+diff --git a/frontend/src/index.css b/frontend/src/index.css
+index 1ce62c5..46c0c9e 100644
+--- a/frontend/src/index.css
++++ b/frontend/src/index.css
+@@ -3,17 +3,35 @@
+ @tailwind utilities;
+ 
+ :root {
++  color-scheme: light;
++}
++
++html.dark {
+   color-scheme: dark;
+ }
+ 
++html, body, #root {
++  height: 100%;
++}
++
+ body {
+-  @apply bg-slate-950 text-slate-100 antialiased;
+-  background-image: radial-gradient(circle at top, rgba(96, 165, 250, 0.08), transparent 30%),
+-    radial-gradient(circle at bottom right, rgba(168, 85, 247, 0.08), transparent 25%);
++  @apply bg-slate-50 text-slate-800;
++}
++
++html.dark body {
++  @apply bg-slate-950 text-slate-100;
++}
++
++.container { max-width: 1100px; }
++
++/* Simple utility to center headings on pages */
++.page-center { display:flex; align-items:center; justify-content:center; height:60vh }
++
++@keyframes fade-in {
++  from { opacity: 0; transform: translateY(10px); }
++  to { opacity: 1; transform: translateY(0); }
+ }
+ 
+-.glass-card {
+-  background: rgba(15, 23, 42, 0.72);
+-  box-shadow: 0 16px 50px rgba(0, 0, 0, 0.35);
+-  backdrop-filter: blur(18px);
++.animate-fade-in {
++  animation: fade-in 240ms ease-out both;
+ }
+diff --git a/frontend/src/layouts/Layout.jsx b/frontend/src/layouts/Layout.jsx
+deleted file mode 100644
+index 99a662c..0000000
+--- a/frontend/src/layouts/Layout.jsx
++++ /dev/null
+@@ -1,12 +0,0 @@
+-import Navbar from '../components/Navbar';
+-
+-function Layout({ children }) {
+-  return (
+-    <div className="min-h-screen bg-slate-950 px-4 py-6 sm:px-6 lg:px-8">
+-      <Navbar />
+-      <main className="mx-auto max-w-7xl py-8">{children}</main>
+-    </div>
+-  );
+-}
+-
+-export default Layout;
+diff --git a/frontend/src/main.jsx b/frontend/src/main.jsx
+index a0831d1..221abf6 100644
+--- a/frontend/src/main.jsx
++++ b/frontend/src/main.jsx
+@@ -1,16 +1,21 @@
+-import React from 'react';
+-import ReactDOM from 'react-dom/client';
+-import { BrowserRouter } from 'react-router-dom';
+-import App from './App';
+-import { AuthProvider } from './context/AuthContext';
+-import './index.css';
++import React from 'react'
++import { createRoot } from 'react-dom/client'
++import { BrowserRouter } from 'react-router-dom'
++import App from './App'
++import './index.css'
++import { Toaster } from 'react-hot-toast'
++import { AuthProvider } from './context/AuthContext'
++import { ThemeProvider } from './context/ThemeContext'
+ 
+-ReactDOM.createRoot(document.getElementById('root')).render(
++createRoot(document.getElementById('root')).render(
+   <React.StrictMode>
+     <BrowserRouter>
+-      <AuthProvider>
+-        <App />
+-      </AuthProvider>
++      <ThemeProvider>
++        <AuthProvider>
++          <App />
++          <Toaster position="top-right" />
++        </AuthProvider>
++      </ThemeProvider>
+     </BrowserRouter>
+   </React.StrictMode>
+-);
++)
+diff --git a/frontend/src/pages/Dashboard.jsx b/frontend/src/pages/Dashboard.jsx
+deleted file mode 100644
+index f3a5a99..0000000
+--- a/frontend/src/pages/Dashboard.jsx
++++ /dev/null
+@@ -1,24 +0,0 @@
+-function Dashboard() {
+-  return (
+-    <section className="glass-card mx-auto max-w-6xl rounded-[2rem] border border-white/10 p-8 shadow-glass">
+-      <div className="mb-8 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+-        <div>
+-          <p className="text-sm uppercase tracking-[0.35em] text-sky-300">Dashboard</p>
+-          <h1 className="mt-3 text-3xl font-semibold text-white">Student overview</h1>
+-        </div>
+-        <div className="rounded-full bg-slate-900/80 px-5 py-3 text-sm text-slate-300">Dark mode enabled</div>
+-      </div>
+-
+-      <div className="grid gap-6 lg:grid-cols-3">
+-        {['Profile', 'Courses', 'Notifications'].map((item) => (
+-          <div key={item} className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-lg shadow-slate-950/20">
+-            <h2 className="text-xl font-semibold text-white">{item}</h2>
+-            <p className="mt-3 text-slate-400">Manage your {item.toLowerCase()} and check updates.</p>
+-          </div>
+-        ))}
+-      </div>
+-    </section>
+-  );
+-}
+-
+-export default Dashboard;
+diff --git a/frontend/src/pages/Landing.jsx b/frontend/src/pages/Landing.jsx
+deleted file mode 100644
+index 3e5d3e8..0000000
+--- a/frontend/src/pages/Landing.jsx
++++ /dev/null
+@@ -1,48 +0,0 @@
+-import { Link } from 'react-router-dom';
+-
+-function Landing() {
+-  return (
+-    <section className="glass-card mx-auto max-w-5xl rounded-[2rem] border border-white/10 px-8 py-16 shadow-glass">
+-      <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
+-        <div>
+-          <span className="text-sm uppercase tracking-[0.35em] text-sky-300">CampusConnect</span>
+-          <h1 className="mt-6 text-4xl font-semibold text-white sm:text-5xl">Your campus, connected.</h1>
+-          <p className="mt-6 text-slate-300 sm:text-lg">
+-            Explore student profiles, manage your campus community, and stay connected with a modern, secure portal built for colleges.
+-          </p>
+-          <div className="mt-10 flex flex-wrap gap-4">
+-            <Link
+-              to="/register"
+-              className="rounded-full bg-sky-500 px-6 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-400"
+-            >
+-              Create account
+-            </Link>
+-            <Link
+-              to="/login"
+-              className="rounded-full border border-white/10 px-6 py-3 text-sm font-semibold text-white transition hover:border-slate-300"
+-            >
+-              Login
+-            </Link>
+-          </div>
+-        </div>
+-
+-        <div className="rounded-[2rem] border border-white/10 bg-slate-900/40 p-8 shadow-glass">
+-          <div className="grid gap-6">
+-            <div className="rounded-3xl bg-slate-950/80 p-6 text-slate-200 shadow-lg shadow-slate-950/20">
+-              <p className="text-sm uppercase tracking-[0.3em] text-sky-400">Future-ready</p>
+-              <h2 className="mt-3 text-2xl font-semibold text-white">Student-first dashboard</h2>
+-              <p className="mt-4 text-slate-400">Quick access to academic tools, profiles, and campus events all in one secure interface.</p>
+-            </div>
+-            <div className="rounded-3xl bg-slate-950/80 p-6 text-slate-200 shadow-lg shadow-slate-950/20">
+-              <p className="text-sm uppercase tracking-[0.3em] text-pink-400">Modern UI</p>
+-              <h2 className="mt-3 text-2xl font-semibold text-white">Glassmorphism design</h2>
+-              <p className="mt-4 text-slate-400">A polished, contemporary visual experience optimized for dark mode.</p>
+-            </div>
+-          </div>
+-        </div>
+-      </div>
+-    </section>
+-  );
+-}
+-
+-export default Landing;
+diff --git a/frontend/src/pages/Login.jsx b/frontend/src/pages/Login.jsx
+deleted file mode 100644
+index 17a1d31..0000000
+--- a/frontend/src/pages/Login.jsx
++++ /dev/null
+@@ -1,56 +0,0 @@
+-import { Link } from 'react-router-dom';
+-
+-function Login() {
+-  return (
+-    <section className="glass-card mx-auto max-w-2xl rounded-[2rem] border border-white/10 p-8 shadow-glass">
+-      <div className="mb-8 text-center">
+-        <h1 className="text-3xl font-semibold text-white">Welcome back</h1>
+-        <p className="mt-2 text-slate-400">Login to access your CampusConnect dashboard.</p>
+-      </div>
+-
+-      <form className="space-y-6">
+-        <div>
+-          <label className="mb-2 block text-sm font-medium text-slate-300" htmlFor="email">
+-            Email
+-          </label>
+-          <input
+-            id="email"
+-            name="email"
+-            type="email"
+-            className="w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-            placeholder="you@example.com"
+-          />
+-        </div>
+-
+-        <div>
+-          <label className="mb-2 block text-sm font-medium text-slate-300" htmlFor="password">
+-            Password
+-          </label>
+-          <input
+-            id="password"
+-            name="password"
+-            type="password"
+-            className="w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-            placeholder="Enter your password"
+-          />
+-        </div>
+-
+-        <button
+-          type="submit"
+-          className="w-full rounded-3xl bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-400"
+-        >
+-          Sign in
+-        </button>
+-      </form>
+-
+-      <p className="mt-6 text-center text-sm text-slate-400">
+-        Don&apos;t have an account?{' '}
+-        <Link className="text-sky-400 hover:text-sky-300" to="/register">
+-          Register
+-        </Link>
+-      </p>
+-    </section>
+-  );
+-}
+-
+-export default Login;
+diff --git a/frontend/src/pages/Profile.jsx b/frontend/src/pages/Profile.jsx
+deleted file mode 100644
+index 79bf126..0000000
+--- a/frontend/src/pages/Profile.jsx
++++ /dev/null
+@@ -1,50 +0,0 @@
+-function Profile() {
+-  return (
+-    <section className="glass-card mx-auto max-w-4xl rounded-[2rem] border border-white/10 p-8 shadow-glass">
+-      <div className="mb-8">
+-        <h1 className="text-3xl font-semibold text-white">My profile</h1>
+-        <p className="mt-2 text-slate-400">View and manage your account details.</p>
+-      </div>
+-
+-      <div className="grid gap-6 lg:grid-cols-2">
+-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-lg shadow-slate-950/20">
+-          <p className="text-sm uppercase tracking-[0.35em] text-sky-300">Student details</p>
+-          <div className="mt-6 space-y-4 text-slate-300">
+-            <div>
+-              <p className="text-sm text-slate-400">Name</p>
+-              <p className="mt-1 text-lg font-medium text-white">Jane Doe</p>
+-            </div>
+-            <div>
+-              <p className="text-sm text-slate-400">Email</p>
+-              <p className="mt-1 text-lg font-medium text-white">jane.doe@example.com</p>
+-            </div>
+-            <div>
+-              <p className="text-sm text-slate-400">Branch</p>
+-              <p className="mt-1 text-lg font-medium text-white">Computer Science</p>
+-            </div>
+-          </div>
+-        </div>
+-
+-        <div className="rounded-3xl border border-white/10 bg-slate-900/80 p-6 shadow-lg shadow-slate-950/20">
+-          <p className="text-sm uppercase tracking-[0.35em] text-sky-300">Status</p>
+-          <div className="mt-6 space-y-4 text-slate-300">
+-            <div>
+-              <p className="text-sm text-slate-400">Year</p>
+-              <p className="mt-1 text-lg font-medium text-white">3</p>
+-            </div>
+-            <div>
+-              <p className="text-sm text-slate-400">Email verified</p>
+-              <p className="mt-1 text-lg font-medium text-white">Yes</p>
+-            </div>
+-            <div>
+-              <p className="text-sm text-slate-400">Account</p>
+-              <p className="mt-1 text-lg font-medium text-white">Active</p>
+-            </div>
+-          </div>
+-        </div>
+-      </div>
+-    </section>
+-  );
+-}
+-
+-export default Profile;
+diff --git a/frontend/src/pages/Register.jsx b/frontend/src/pages/Register.jsx
+deleted file mode 100644
+index 445b243..0000000
+--- a/frontend/src/pages/Register.jsx
++++ /dev/null
+@@ -1,112 +0,0 @@
+-import { Link } from 'react-router-dom';
+-
+-function Register() {
+-  return (
+-    <section className="glass-card mx-auto max-w-2xl rounded-[2rem] border border-white/10 p-8 shadow-glass">
+-      <div className="mb-8 text-center">
+-        <h1 className="text-3xl font-semibold text-white">Create an account</h1>
+-        <p className="mt-2 text-slate-400">Join CampusConnect and manage your campus profile.</p>
+-      </div>
+-
+-      <form className="space-y-6">
+-        <div className="grid gap-4 sm:grid-cols-2">
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Full name</span>
+-            <input
+-              name="fullName"
+-              type="text"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="Jane Doe"
+-            />
+-          </label>
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Email</span>
+-            <input
+-              name="email"
+-              type="email"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="you@example.com"
+-            />
+-          </label>
+-        </div>
+-
+-        <div className="grid gap-4 sm:grid-cols-2">
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Password</span>
+-            <input
+-              name="password"
+-              type="password"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="Enter a password"
+-            />
+-          </label>
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Branch</span>
+-            <input
+-              name="branch"
+-              type="text"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="Computer Science"
+-            />
+-          </label>
+-        </div>
+-
+-        <div className="grid gap-4 sm:grid-cols-3">
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Year</span>
+-            <input
+-              name="year"
+-              type="number"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="3"
+-            />
+-          </label>
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Gender</span>
+-            <input
+-              name="gender"
+-              type="text"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="Female"
+-            />
+-          </label>
+-          <label className="block text-sm text-slate-300">
+-            <span className="text-slate-400">Profile photo URL</span>
+-            <input
+-              name="profilePhoto"
+-              type="text"
+-              className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-              placeholder="https://..."
+-            />
+-          </label>
+-        </div>
+-
+-        <label className="block text-sm text-slate-300">
+-          <span className="text-slate-400">Bio</span>
+-          <textarea
+-            name="bio"
+-            rows="4"
+-            className="mt-2 w-full rounded-3xl border border-white/10 bg-slate-900/80 px-4 py-3 text-white outline-none transition focus:border-sky-400 focus:ring-2 focus:ring-sky-400/20"
+-            placeholder="Tell us a little about yourself"
+-          />
+-        </label>
+-
+-        <button
+-          type="submit"
+-          className="w-full rounded-3xl bg-sky-500 px-5 py-3 text-sm font-semibold text-slate-950 transition hover:bg-sky-400"
+-        >
+-          Create account
+-        </button>
+-      </form>
+-
+-      <p className="mt-6 text-center text-sm text-slate-400">
+-        Already have an account?{' '}
+-        <Link className="text-sky-400 hover:text-sky-300" to="/login">
+-          Login
+-        </Link>
+-      </p>
+-    </section>
+-  );
+-}
+-
+-export default Register;
+diff --git a/frontend/src/services/api.js b/frontend/src/services/api.js
+deleted file mode 100644
+index 59274aa..0000000
+--- a/frontend/src/services/api.js
++++ /dev/null
+@@ -1,10 +0,0 @@
+-import axios from 'axios';
+-
+-const api = axios.create({
+-  baseURL: 'http://localhost:8080',
+-  headers: {
+-    'Content-Type': 'application/json',
+-  },
+-});
+-
+-export default api;
+diff --git a/frontend/src/services/authService.js b/frontend/src/services/authService.js
+deleted file mode 100644
+index 248edb8..0000000
+--- a/frontend/src/services/authService.js
++++ /dev/null
+@@ -1,4 +0,0 @@
+-import api from './api';
+-
+-export const login = (credentials) => api.post('/auth/login', credentials);
+-export const register = (payload) => api.post('/auth/register', payload);
+diff --git a/frontend/tailwind.config.js b/frontend/tailwind.config.js
+deleted file mode 100644
+index 87f8580..0000000
+--- a/frontend/tailwind.config.js
++++ /dev/null
+@@ -1,23 +0,0 @@
+-import forms from '@tailwindcss/forms';
+-
+-export default {
+-  content: [
+-    './index.html',
+-    './src/**/*.{js,jsx,ts,tsx}',
+-  ],
+-  darkMode: 'class',
+-  theme: {
+-    extend: {
+-      boxShadow: {
+-        glass: '0 8px 32px 0 rgba(31, 38, 135, 0.37)',
+-      },
+-      backdropBlur: {
+-        xs: '2px',
+-      },
+-      colors: {
+-        glass: 'rgba(255,255,255,0.12)',
+-      },
+-    },
+-  },
+-  plugins: [forms],
+-};
+diff --git a/frontend/vite.config.js b/frontend/vite.config.js
+deleted file mode 100644
+index 0466183..0000000
+--- a/frontend/vite.config.js
++++ /dev/null
+@@ -1,6 +0,0 @@
+-import { defineConfig } from 'vite';
+-import react from '@vitejs/plugin-react';
+-
+-export default defineConfig({
+-  plugins: [react()],
+-});
