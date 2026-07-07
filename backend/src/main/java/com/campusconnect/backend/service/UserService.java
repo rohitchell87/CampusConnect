@@ -12,12 +12,15 @@ import com.campusconnect.backend.exception.InvalidCredentialsException;
 import com.campusconnect.backend.exception.UserNotFoundException;
 import com.campusconnect.backend.repository.UserProfileRepository;
 import com.campusconnect.backend.repository.UserRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
 public class UserService {
 
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
     private final UserRepository userRepository;
     private final UserProfileRepository userProfileRepository;
     private final PasswordEncoder passwordEncoder;
@@ -85,5 +88,16 @@ public class UserService {
                 .fullName(user.getProfile() != null ? user.getProfile().getFullName() : null)
                 .email(user.getEmail())
                 .build();
+    }
+
+    public String requestPasswordReset(String email) {
+        boolean exists = userRepository.existsByEmail(email);
+        if (exists) {
+            logger.info("Password reset requested for email={}", email);
+            // TODO: integrate a real email service here to send a reset link.
+        } else {
+            logger.info("Password reset request for unknown email={}", email);
+        }
+        return "If that email exists in our system, a password reset link has been sent.";
     }
 }

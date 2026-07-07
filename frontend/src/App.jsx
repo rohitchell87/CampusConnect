@@ -1,19 +1,21 @@
 import React from 'react'
+import { useLocation } from 'react-router-dom'
 import AppRoutes from './routes/AppRoutes'
 import Navbar from './components/layout/Navbar'
-import Footer from './components/layout/Footer'
 import ErrorBoundary from './components/common/ErrorBoundary'
 
 export default function App() {
+  const location = useLocation()
+  const isAuthRoute = ['/login', '/register'].includes(location.pathname)
+
   return (
-    <div className="min-h-screen flex flex-col bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 transition-colors duration-300">
-      <Navbar />
-      <main className="flex-1 container mx-auto px-4 py-8">
+    <div className="app-shell bg-[#090909] text-white">
+      {isAuthRoute && <Navbar />}
+      <main className={`page-container ${isAuthRoute ? 'flex-1 flex items-center justify-center py-0' : 'flex-1'}`}>
         <ErrorBoundary>
           <AppRoutes />
         </ErrorBoundary>
       </main>
-      <Footer />
     </div>
   )
 }

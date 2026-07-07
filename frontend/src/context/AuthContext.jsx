@@ -21,6 +21,30 @@ export function AuthProvider({ children }){
     }
   }, [token])
 
+  // Handle OAuth redirect with token param (e.g. /?token=...)
+  useEffect(() => {
+    try {
+      const params = new URLSearchParams(window.location.search)
+      const t = params.get('token') || params.get('access_token')
+      const err = params.get('error')
+      if (err) {
+        toast.error(`Google sign-in failed: ${err}`)
+      }
+      if (t && !token) {
+        localStorage.setItem('cc_token', t)
+        setToken(t)
+        api.defaults.headers.common['Authorization'] = `Bearer ${t}`
+        // remove token from URL
+        const url = new URL(window.location.href)
+        url.searchParams.delete('token')
+        url.searchParams.delete('access_token')
+        window.history.replaceState({}, document.title, url.pathname + url.search)
+      }
+    } catch (err) {
+      console.error('Failed to process OAuth token from URL', err)
+    }
+  }, [])
+
   useEffect(()=>{
     const loadProfile = async () => {
       if (!token) return
@@ -28,6 +52,11 @@ export function AuthProvider({ children }){
       try{
         const profile = await profileService.getMyProfile()
         setUser(profile)
+        // If we landed on the root or login page after OAuth redirect, navigate appropriately
+        const currentPath = window.location.pathname
+        if (currentPath === '/' || currentPath === '/login') {
+          navigate(isProfileComplete(profile) ? '/discover' : '/complete-profile')
+        }
       }catch(err){
         console.error('Failed to load profile', err)
         logout()
@@ -63,6 +92,27 @@ export function AuthProvider({ children }){
     }finally{ setLoading(false) }
   }
 
+  const requestPasswordReset = async (email) => {
+    try{
+      const res = await api.post('/api/auth/forgot-password', { email })
+      return res.data
+    }catch(err){
+      const msg = err?.response?.data?.message || err?.response?.data || err.message || 'Failed to request password reset'
+      toast.error(msg)
+      throw err
+    }
+  }
+
+  const loginWithGoogle = async () => {
+    try{
+      const backend = import.meta?.env?.VITE_API_BASE || 'http://localhost:8080'
+      // Redirect the browser to Spring Security's OAuth2 authorization endpoint
+      window.location.href = `${backend}/oauth2/authorization/google`
+    }catch(err){
+      toast.error('Unable to start Google sign-in. Try again later.')
+    }
+  }
+
   const register = async (payload) => {
     setLoading(true)
     try{
@@ -88,7 +138,7 @@ export function AuthProvider({ children }){
   const isAuthenticated = () => !!token
 
   return (
-    <AuthContext.Provider value={{ token, user, setUser, loading, profileLoading, login, logout, register, isAuthenticated, isProfileComplete }}>
+    <AuthContext.Provider value={{ token, user, setUser, loading, profileLoading, login, logout, register, isAuthenticated, isProfileComplete, requestPasswordReset, loginWithGoogle }}>
       {children}
     </AuthContext.Provider>
   )

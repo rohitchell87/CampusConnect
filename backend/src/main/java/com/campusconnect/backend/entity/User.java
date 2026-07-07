@@ -47,6 +47,22 @@ public class User implements UserDetails, Principal {
     @Builder.Default
     private Boolean enabled = true;
 
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean darkMode = true;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean pushNotifications = true;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean emailNotifications = true;
+
+    @Builder.Default
+    @Column(nullable = false)
+    private Boolean showOnlineStatus = false;
+
     @OneToOne(mappedBy = "user", fetch = FetchType.LAZY, cascade = jakarta.persistence.CascadeType.ALL, optional = true)
     private UserProfile profile;
 

@@ -43,4 +43,8 @@ public class ProfileResponse {
     private String coverPhoto;
     private LookingFor lookingFor;
     private Set<InterestResponse> interests;
+    private Boolean darkMode;
+    private Boolean pushNotifications;
+    private Boolean emailNotifications;
+    private Boolean showOnlineStatus;
 }

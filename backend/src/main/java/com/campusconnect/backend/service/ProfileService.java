@@ -94,6 +94,8 @@ public class ProfileService {
     }
 
     private ProfileResponse mapToResponse(UserProfile profile) {
+        User user = profile.getUser();
+
         return ProfileResponse.builder()
                 .id(profile.getId())
                 .fullName(profile.getFullName())
@@ -115,6 +117,10 @@ public class ProfileService {
                 .coverPhoto(profile.getCoverPhoto())
                 .lookingFor(profile.getLookingFor())
                 .interests(mapInterests(profile.getInterests()))
+                .darkMode(user != null ? user.getDarkMode() : null)
+                .pushNotifications(user != null ? user.getPushNotifications() : null)
+                .emailNotifications(user != null ? user.getEmailNotifications() : null)
+                .showOnlineStatus(user != null ? user.getShowOnlineStatus() : null)
                 .build();
     }
 

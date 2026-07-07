@@ -1,6 +1,7 @@
 package com.campusconnect.backend.service;
 
 import com.campusconnect.backend.entity.Match;
+import com.campusconnect.backend.entity.Notification;
 import com.campusconnect.backend.entity.User;
 import com.campusconnect.backend.entity.UserLike;
 import com.campusconnect.backend.exception.AlreadyLikedException;
@@ -20,12 +21,14 @@ public class LikeService {
     private final UserRepository userRepository;
     private final UserLikeRepository userLikeRepository;
     private final MatchRepository matchRepository;
+    private final NotificationService notificationService;
 
     public LikeService(UserRepository userRepository, UserLikeRepository userLikeRepository,
-                       MatchRepository matchRepository) {
+                       MatchRepository matchRepository, NotificationService notificationService) {
         this.userRepository = userRepository;
         this.userLikeRepository = userLikeRepository;
         this.matchRepository = matchRepository;
+        this.notificationService = notificationService;
     }
 
     @Transactional
@@ -48,6 +51,14 @@ public class LikeService {
 
         userLikeRepository.save(like);
 
+        notificationService.createNotification(
+                receiver,
+                sender,
+                Notification.NotificationType.LIKE,
+                "New Like ❤️",
+                String.format("%s liked your profile.", resolveDisplayName(sender))
+        );
+
         if (userLikeRepository.existsBySenderAndReceiver(receiver, sender)) {
             User userOne;
             User userTwo;
@@ -65,8 +76,31 @@ public class LikeService {
                         .userTwo(userTwo)
                         .build();
                 matchRepository.save(match);
+
+                notificationService.createNotification(
+                        userOne,
+                        userTwo,
+                        Notification.NotificationType.MATCH,
+                        "It's a Match! 🎉",
+                        String.format("You and %s liked each other.", resolveDisplayName(userTwo))
+                );
+                notificationService.createNotification(
+                        userTwo,
+                        userOne,
+                        Notification.NotificationType.MATCH,
+                        "It's a Match! 🎉",
+                        String.format("You and %s liked each other.", resolveDisplayName(userOne))
+                );
             }
         }
+    }
+
+    private String resolveDisplayName(User user) {
+        if (user.getProfile() != null && user.getProfile().getFullName() != null
+                && !user.getProfile().getFullName().isBlank()) {
+            return user.getProfile().getFullName();
+        }
+        return user.getEmail() != null ? user.getEmail() : "someone";
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package com.campusconnect.backend.controller;
 
+import com.campusconnect.backend.dto.ForgotPasswordRequest;
 import com.campusconnect.backend.dto.LoginRequest;
 import com.campusconnect.backend.dto.LoginResponse;
 import com.campusconnect.backend.dto.RegisterRequest;
@@ -57,6 +58,18 @@ public class AuthController {
         logger.info("Login attempt for email={}", request.getEmail());
         LoginResponse response = userService.login(request);
         return ResponseEntity.ok(response);
+    }
+
+    @Operation(summary = "Request password reset instructions")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "Password reset email requested", content = @Content(schema = @Schema(implementation = Map.class))),
+            @ApiResponse(responseCode = "400", description = "Invalid email", content = @Content)
+    })
+    @PostMapping("/forgot-password")
+    public ResponseEntity<Map<String, String>> forgotPassword(@Valid @RequestBody ForgotPasswordRequest request) {
+        logger.info("Forgot password requested for email={}", request.getEmail());
+        String message = userService.requestPasswordReset(request.getEmail());
+        return ResponseEntity.ok(Map.of("message", message));
     }
 
     @Operation(summary = "Get authenticated user details")
