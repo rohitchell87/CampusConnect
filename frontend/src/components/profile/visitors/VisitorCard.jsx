@@ -15,9 +15,9 @@ export default function VisitorCard({ visitor }) {
       whileHover={{ y: -2, scale: 1.01 }}
       transition={{ duration: 0.2 }}
       onClick={() => navigate(`/profile/${visitor.profileId || ''}`)}
-      className="flex w-full items-center gap-3 rounded-[18px] border border-white/10 bg-[#111827]/70 px-3 py-3 text-left transition hover:border-[#7C5CFF]/35 hover:bg-[#161d31]"
+      className="flex w-full items-center gap-3 rounded-[18px] border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] px-3 py-3 text-left transition hover:border-[color:var(--accent-secondary)]/35 hover:bg-[color:var(--surface-elevated)]"
     >
-      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-white/10 bg-[#0f1425] text-sm font-semibold text-[#D8D4FF]">
+      <div className="flex h-12 w-12 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)] text-sm font-semibold text-[color:var(--text-secondary)]">
         {visitor.profilePhoto ? (
           <img src={visitor.profilePhoto} alt={visitor.fullName} className="h-full w-full object-cover" />
         ) : (
@@ -27,11 +27,11 @@ export default function VisitorCard({ visitor }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex items-center gap-2">
-          <p className="truncate text-sm font-semibold text-white">{visitor.fullName}</p>
-          <Eye className="h-3.5 w-3.5 flex-shrink-0 text-[#A78BFA]" />
+          <p className="truncate text-sm font-semibold text-[color:var(--text-primary)]">{visitor.fullName}</p>
+          <Eye className="h-3.5 w-3.5 flex-shrink-0 text-[color:var(--accent-secondary)]" />
         </div>
-        <p className="mt-1 truncate text-sm text-[#B9BBCC]">{visitor.college || 'College unknown'}</p>
-        <p className="mt-1 text-xs text-[#94A3B8]">Viewed your profile • {formatRelativeTime(visitor.viewedAt)}</p>
+        <p className="mt-1 truncate text-sm text-[color:var(--text-secondary)]">{visitor.college || 'College unknown'}</p>
+        <p className="mt-1 text-xs text-[color:var(--text-muted)]">Viewed your profile • {formatRelativeTime(visitor.viewedAt)}</p>
       </div>
     </motion.button>
   )

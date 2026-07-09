@@ -391,13 +391,13 @@ export default function Discover(){
 
   if (!hasLoaded || !activeProfile || !cardReady) {
     return (
-      <div className="animate-fade-in h-full bg-[#080A14] text-white overflow-hidden" style={{ backgroundImage: 'radial-gradient(circle at top left, rgba(124,92,255,0.14), transparent 22%), radial-gradient(circle at bottom right, rgba(159,122,234,0.10), transparent 18%)' }}>
+      <div className="animate-fade-in h-full overflow-hidden" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', backgroundImage: 'radial-gradient(circle at top left, rgba(124,92,255,0.14), transparent 22%), radial-gradient(circle at bottom right, rgba(159,122,234,0.10), transparent 18%)' }}>
         <div className="h-full mx-auto flex w-full max-w-[1080px] flex-col items-center justify-center px-4 py-6 sm:px-6">
           <div className="mb-4 flex w-full max-w-[680px] justify-end">
-            <div className="h-10 w-32 animate-pulse rounded-full bg-[#111429]" />
+            <div className="h-10 w-32 animate-pulse rounded-full" style={{ backgroundColor: 'var(--surface-bg)' }} />
           </div>
-          <div className="w-full max-w-[680px] overflow-hidden rounded-[32px] border border-white/10 bg-[#0B1021]/60 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.48)] backdrop-blur-3xl">
-            <div className="h-[560px] overflow-hidden rounded-[28px] bg-gradient-to-b from-[#0B1021]/80 to-[#070810]/70">
+          <div className="w-full max-w-[680px] overflow-hidden rounded-[32px] border p-6 shadow-[0_40px_120px_rgba(0,0,0,0.48)] backdrop-blur-3xl" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)' }}>
+            <div className="h-[560px] overflow-hidden rounded-[28px]" style={{ background: 'linear-gradient(180deg, var(--surface-bg), var(--bg-secondary))' }}>
               <div className="h-[380px] w-full animate-pulse bg-slate-800" />
               <div className="p-6">
                 <div className="h-6 w-48 animate-pulse rounded-full bg-slate-800" />
@@ -412,7 +412,7 @@ export default function Discover(){
   }
 
   return (
-    <div className="animate-fade-in h-full bg-[#080A14] text-white overflow-hidden" style={{ backgroundImage: 'radial-gradient(circle at top left, rgba(124,92,255,0.14), transparent 22%), radial-gradient(circle at bottom right, rgba(159,122,234,0.10), transparent 18%)' }}>
+    <div className="animate-fade-in h-full overflow-hidden" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)', backgroundImage: 'radial-gradient(circle at top left, rgba(124,92,255,0.14), transparent 22%), radial-gradient(circle at bottom right, rgba(159,122,234,0.10), transparent 18%)' }}>
       <div className="h-full mx-auto flex w-full max-w-[1080px] flex-col items-center justify-center px-4 py-6 sm:px-6">
         <div className="mb-4 flex w-full max-w-[680px] justify-end">
           <motion.button
@@ -420,12 +420,13 @@ export default function Discover(){
             whileHover={{ y: -2, scale: 1.02 }}
             whileTap={{ scale: 0.97 }}
             onClick={() => setDrawerOpen(true)}
-            className="inline-flex items-center gap-2 rounded-full border border-[#7C5CFF]/30 bg-[#0f1220]/80 px-4 py-2 text-sm font-semibold text-[#EDE8FF] shadow-[0_12px_30px_rgba(124,92,255,0.16)] backdrop-blur"
+            className="inline-flex items-center gap-2 rounded-full border px-4 py-2 text-sm font-semibold shadow-[0_12px_30px_rgba(124,92,255,0.16)] backdrop-blur"
+            style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)', color: 'var(--text-primary)' }}
           >
-            <SlidersHorizontal className="h-4 w-4 text-[#A78BFA]" />
+            <SlidersHorizontal className="h-4 w-4" style={{ color: 'var(--accent-secondary)' }} />
             Filters
             {activeFilterCount > 0 && (
-              <span className="rounded-full bg-[#7C5CFF] px-2 py-0.5 text-[11px] font-semibold text-white">{activeFilterCount}</span>
+              <span className="rounded-full px-2 py-0.5 text-[11px] font-semibold" style={{ backgroundColor: 'var(--accent)', color: 'var(--surface-elevated)' }}>{activeFilterCount}</span>
             )}
           </motion.button>
         </div>
@@ -438,8 +439,8 @@ export default function Discover(){
           </div>
         )}
         {loading ? (
-          <div className="w-full max-w-[680px] overflow-hidden rounded-[32px] border border-white/10 bg-[#0B1021]/60 p-6 shadow-[0_40px_120px_rgba(0,0,0,0.48)] backdrop-blur-3xl">
-            <div className="h-[560px] overflow-hidden rounded-[28px] bg-gradient-to-b from-[#0B1021]/80 to-[#070810]/70">
+          <div className="w-full max-w-[680px] overflow-hidden rounded-[32px] border p-6 shadow-[0_40px_120px_rgba(0,0,0,0.48)] backdrop-blur-3xl" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)' }}>
+            <div className="h-[560px] overflow-hidden rounded-[28px]" style={{ background: 'linear-gradient(180deg, var(--surface-bg), var(--bg-secondary))' }}>
               <div className="h-[380px] w-full animate-pulse bg-slate-800" />
               <div className="p-6">
                 <div className="h-6 w-48 animate-pulse rounded-full bg-slate-800" />
@@ -449,10 +450,10 @@ export default function Discover(){
             </div>
           </div>
         ) : data.content.length === 0 ? (
-          <div className="w-full max-w-[640px] overflow-hidden rounded-[32px] border border-white/10 bg-[#0B1021]/95 p-8 text-center text-[#A1A1AA] shadow-[0_40px_90px_rgba(0,0,0,0.35)] backdrop-blur-3xl">
-            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#7C5CFF]/10 to-[#9F7AEA]/8 text-3xl shadow-lg">✨</div>
-            <h2 className="text-3xl font-semibold tracking-tight text-white">You're all caught up</h2>
-            <p className="mx-auto mt-4 max-w-lg text-base leading-7 text-[#D8D4FF]">Check back later for new students.</p>
+          <div className="w-full max-w-[640px] overflow-hidden rounded-[32px] border p-8 text-center shadow-[0_40px_90px_rgba(0,0,0,0.35)] backdrop-blur-3xl" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)', color: 'var(--text-secondary)' }}>
+            <div className="mx-auto mb-6 flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[var(--accent)]/10 to-[var(--accent-secondary)]/10 text-3xl shadow-lg" style={{ color: 'var(--accent-secondary)' }}>✨</div>
+            <h2 className="text-3xl font-semibold tracking-tight" style={{ color: 'var(--text-primary)' }}>You're all caught up</h2>
+            <p className="mx-auto mt-4 max-w-lg text-base leading-7" style={{ color: 'var(--text-secondary)' }}>Check back later for new students.</p>
             <div className="mt-8 flex flex-wrap items-center justify-center gap-4">
               <button onClick={goPrev} disabled={page===0} className="btn-secondary min-w-[150px] rounded-full px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50">Previous</button>
               <button onClick={goNext} disabled={page >= (data.totalPages-1)} className="btn-secondary min-w-[150px] rounded-full px-6 py-3 text-sm disabled:cursor-not-allowed disabled:opacity-50">Next</button>
@@ -471,11 +472,11 @@ export default function Discover(){
                 layout
                 transition={{ duration: 0.45, ease: 'easeOut' }}
                 onClick={() => openProfilePreview(activeProfile)}
-                className="overflow-hidden rounded-[30px] border border-white/8 bg-[rgba(10,12,20,0.55)] shadow-[0_40px_120px_rgba(15,23,42,0.45)] backdrop-blur-3xl transition-transform duration-300 hover:-translate-y-1"
-                style={{ maxWidth: 700 }}
+                className="overflow-hidden rounded-[30px] border shadow-[0_40px_120px_rgba(15,23,42,0.45)] backdrop-blur-3xl transition-transform duration-300 hover:-translate-y-1"
+                style={{ maxWidth: 700, borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)' }}
               >
                 <div className="relative h-[560px]">
-                  <div className="relative h-[400px] overflow-hidden bg-[#0f1220] rounded-t-[30px]">
+                  <div className="relative h-[400px] overflow-hidden rounded-t-[30px]" style={{ backgroundColor: 'var(--surface-bg)' }}>
                     <img
                       src={discoverCardImageSrc}
                       alt={`${activeProfile.fullName} profile`}
@@ -490,7 +491,7 @@ export default function Discover(){
                         <span>Today&apos;s Pick</span>
                       </div>
                     )}
-                    <div className="absolute inset-0 bg-gradient-to-t from-[rgba(8,10,20,0.9)] via-[rgba(8,10,20,0.45)] to-transparent" />
+                    <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--bg-primary)] via-[color:var(--bg-primary)]/45 to-transparent" />
 
                     {/* Compatibility badge top-left */}
                     <button
@@ -499,7 +500,8 @@ export default function Discover(){
                         event.stopPropagation()
                         setShowCompatibility((prev) => !prev)
                       }}
-                      className="absolute left-4 top-4 flex items-center gap-2 rounded-full bg-[#0f1220]/70 px-3 py-2 text-sm font-semibold text-white border border-white/6 shadow-md"
+                      className="absolute left-4 top-4 flex items-center gap-2 rounded-full px-3 py-2 text-sm font-semibold border shadow-md"
+                      style={{ backgroundColor: 'var(--surface-glass)', borderColor: 'var(--border-primary)', color: 'var(--text-primary)' }}
                     >
                       <span className="text-lg leading-none">✦</span>
                       <span className="text-sm">{matchPct}% compatible</span>
@@ -515,7 +517,7 @@ export default function Discover(){
                     )}
 
                     {/* Online indicator top-right */}
-                    <div className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full bg-[#0d1224]/80 px-3 py-2 text-xs font-semibold text-[#D7D2F1] border border-white/6">
+                    <div className="absolute right-4 top-4 inline-flex items-center gap-2 rounded-full px-3 py-2 text-xs font-semibold border" style={{ backgroundColor: 'var(--surface-glass)', borderColor: 'var(--border-primary)', color: 'var(--text-secondary)' }}>
                       <span className="h-2.5 w-2.5 rounded-full bg-emerald-400 shadow-[0_0_0_6px_rgba(16,185,129,0.08)]" />
                       Online
                     </div>
@@ -526,24 +528,25 @@ export default function Discover(){
                         event.stopPropagation()
                         openProfilePreview(activeProfile)
                       }}
-                      className="absolute right-4 top-16 inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0f1220]/70 px-3 py-2 text-sm font-semibold text-[#EDE8FF] shadow-[0_12px_30px_rgba(0,0,0,0.25)] backdrop-blur"
+                      className="absolute right-4 top-16 inline-flex items-center gap-2 rounded-full border px-3 py-2 text-sm font-semibold shadow-[0_12px_30px_rgba(0,0,0,0.25)] backdrop-blur"
+                      style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)', color: 'var(--text-primary)' }}
                     >
-                      <Eye className="h-4 w-4 text-[#A78BFA]" />
+                      <Eye className="h-4 w-4" style={{ color: 'var(--accent-secondary)' }} />
                       Preview
                     </button>
                   </div>
 
                   {/* Floating info panel attached to bottom of photo */}
                   <div className="absolute left-6 right-6 -bottom-10">
-                    <div className="rounded-[30px] border border-white/8 bg-[rgba(7,9,16,0.55)] p-6 backdrop-blur-xl shadow-[0_24px_60px_rgba(15,23,42,0.5)]">
+                    <div className="rounded-[30px] border p-6 backdrop-blur-xl shadow-[0_24px_60px_rgba(15,23,42,0.5)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)' }}>
                       <div className="flex items-center gap-4">
                         <div className="min-w-0">
                           <div className="flex items-center gap-3">
-                            <h1 className="truncate text-[30px] font-bold text-white">{activeProfile.fullName}</h1>
-                            <span className="rounded-full bg-[#7C5CFF]/12 px-3 py-1 text-sm font-semibold text-[#EDE8FF]">{activeProfile.age || '—'}</span>
+                            <h1 className="truncate text-[30px] font-bold" style={{ color: 'var(--text-primary)' }}>{activeProfile.fullName}</h1>
+                            <span className="rounded-full px-3 py-1 text-sm font-semibold" style={{ backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>{activeProfile.age || '—'}</span>
                             <VerifiedBadge user={activeProfile} className="ml-1" />
                           </div>
-                          <div className="mt-4 flex items-center gap-4 text-[15px] text-[#B9B4D7]">
+                          <div className="mt-4 flex items-center gap-4 text-[15px]" style={{ color: 'var(--text-secondary)' }}>
                             <span className="truncate">{activeProfile.branch || 'Unknown course'}{activeProfile.year ? ` · Year ${activeProfile.year}` : ''}</span>
                             <span className="truncate">· {activeProfile.college || 'Unknown college'}</span>
                           </div>
@@ -552,13 +555,13 @@ export default function Discover(){
 
                       <div className="mt-6 flex flex-wrap items-center gap-3">
                         {interests.length > 0 ? interests.slice(0, 5).map((interest, index) => (
-                          <span key={index} className="flex items-center gap-2 rounded-full bg-[rgba(124,92,255,0.16)] px-3 py-1.5 text-[14px] font-medium text-white">{interest}</span>
+                          <span key={index} className="flex items-center gap-2 rounded-full px-3 py-1.5 text-[14px] font-medium" style={{ backgroundColor: 'rgba(124,92,255,0.16)', color: 'var(--text-primary)' }}>{interest}</span>
                         )) : (
-                          <span className="rounded-full bg-white/5 px-3 py-1.5 text-sm font-medium text-[#A1A1AA]">No interests listed</span>
+                          <span className="rounded-full px-3 py-1.5 text-sm font-medium" style={{ backgroundColor: 'var(--surface-bg)', color: 'var(--text-muted)' }}>No interests listed</span>
                         )}
                       </div>
 
-                      <div className="mt-6 relative text-[15px] text-[#D8D4FF]">
+                      <div className="mt-6 relative text-[15px]" style={{ color: 'var(--text-secondary)' }}>
                         <div style={{ overflow: 'hidden', display: '-webkit-box', WebkitLineClamp: bioExpanded ? '100' : 3, WebkitBoxOrient: 'vertical' }}>
                           <p>{activeProfile.bio || 'A thoughtful campus explorer seeking meaningful campus connections.'}</p>
                         </div>
@@ -577,21 +580,21 @@ export default function Discover(){
                         {showCompatibility ? (
                           <CompatibilityBreakdown currentUser={currentUser} otherUser={activeProfile} score={matchPct} defaultOpen />
                         ) : (
-                          <div className="rounded-[20px] border border-white/8 bg-white/[0.04] p-4">
+                          <div className="rounded-[20px] border p-4" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}>
                             <div className="flex items-center justify-between gap-3">
-                              <p className="text-sm font-semibold text-white">Why you&apos;re compatible</p>
-                              <span className="text-xs font-medium text-[#A78BFA]">{matchPct}%</span>
+                              <p className="text-sm font-semibold text-[color:var(--text-primary)]">Why you&apos;re compatible</p>
+                              <span className="text-xs font-medium text-[color:var(--accent-secondary)]">{matchPct}%</span>
                             </div>
                             <ul className="mt-3 space-y-2">
                               {compatibilityReasons.length > 0 ? (
                                 compatibilityReasons.map((reason, index) => (
-                                  <li key={`${reason}-${index}`} className="flex items-center gap-2 text-sm text-[#D8D4FF]">
-                                    <span className="text-[#7C5CFF]">✔</span>
+                                  <li key={`${reason}-${index}`} className="flex items-center gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                                    <span style={{ color: 'var(--accent)' }}>✔</span>
                                     <span>{reason}</span>
                                   </li>
                                 ))
                               ) : (
-                                <li className="text-sm text-[#A1A1AA]">We’ll compare your profile details once enough matching data is available.</li>
+                                <li className="text-sm" style={{ color: 'var(--text-muted)' }}>We’ll compare your profile details once enough matching data is available.</li>
                               )}
                             </ul>
                           </div>
@@ -599,7 +602,7 @@ export default function Discover(){
                       </div>
 
                       <div className="mt-6 flex items-center gap-3 text-[15px] text-[#B9B4D7]">
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-[#A1A1AA]" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" style={{ color: 'var(--text-muted)' }}>
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 11c1.657 0 3-1.343 3-3S13.657 5 12 5 9 6.343 9 8s1.343 3 3 3z" />
                           <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 21s8-4.5 8-10.5S15.866 3 12 3 4 6 4 10.5 12 21 12 21z" />
                         </svg>
@@ -618,7 +621,8 @@ export default function Discover(){
                       handleSkip(activeProfile)
                     }}
                     disabled={isAnimating}
-                    className="flex h-16 w-16 items-center justify-center rounded-full bg-[#111827] text-2xl font-semibold text-white transition-transform duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 shadow-[0_14px_40px_rgba(0,0,0,0.55)]"
+                    className="flex h-16 w-16 items-center justify-center rounded-full text-2xl font-semibold transition-transform duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50 shadow-[0_14px_40px_rgba(0,0,0,0.55)]"
+                    style={{ backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}
                     aria-label="Skip profile"
                   >
                     ✕
@@ -631,7 +635,8 @@ export default function Discover(){
                       handleLike(activeProfile)
                     }}
                     disabled={isAnimating}
-                    className="relative flex h-20 w-20 items-center justify-center rounded-full bg-gradient-to-br from-[#7C5CFF] to-[#9F7AEA] text-3xl text-white shadow-[0_30px_60px_rgba(124,92,255,0.28)] transition-transform duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="relative flex h-20 w-20 items-center justify-center rounded-full text-3xl shadow-[0_30px_60px_rgba(124,92,255,0.28)] transition-transform duration-200 hover:scale-105 active:scale-95 disabled:cursor-not-allowed disabled:opacity-50"
+                    style={{ backgroundImage: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: 'var(--surface-elevated)' }}
                     aria-label="Like profile"
                   >
                     ❤
@@ -655,7 +660,8 @@ export default function Discover(){
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[80] overflow-y-auto bg-[#02040A]/85 px-3 py-5 backdrop-blur-xl sm:px-6 sm:py-6"
+            className="fixed inset-0 z-[80] overflow-y-auto px-3 py-5 backdrop-blur-xl sm:px-6 sm:py-6"
+            style={{ backgroundColor: 'rgba(2, 4, 10, 0.84)' }}
             onClick={closeProfilePreview}
           >
             <motion.div
@@ -663,62 +669,63 @@ export default function Discover(){
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.96, y: 12 }}
               transition={{ duration: 0.24, ease: 'easeOut' }}
-              className="mx-auto flex min-h-full w-[min(92vw,1560px)] max-w-[1560px] flex-col rounded-[32px] border border-white/10 bg-[#080B14] shadow-[0_40px_140px_rgba(0,0,0,0.45)]"
+              className="mx-auto flex min-h-full w-[min(92vw,1560px)] max-w-[1560px] flex-col rounded-[32px] border shadow-[0_40px_140px_rgba(0,0,0,0.45)]"
+              style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--bg-primary)' }}
               onClick={(event) => event.stopPropagation()}
             >
-              <div className="flex items-center justify-between border-b border-white/10 px-4 py-4 sm:px-6">
+              <div className="flex items-center justify-between border-b px-4 py-4 sm:px-6" style={{ borderColor: 'var(--border-primary)' }}>
                 <div>
-                  <p className="text-sm font-semibold uppercase tracking-[0.3em] text-[#A78BFA]">Profile Preview</p>
-                  <p className="mt-1 text-sm text-[#AAB0C2]">A read-only look at this profile without leaving Discover.</p>
+                  <p className="text-sm font-semibold uppercase tracking-[0.3em]" style={{ color: 'var(--accent-secondary)' }}>Profile Preview</p>
+                  <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>A read-only look at this profile without leaving Discover.</p>
                 </div>
-                <button type="button" onClick={closeProfilePreview} className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white hover:bg-white/10">
+                <button type="button" onClick={closeProfilePreview} className="inline-flex h-10 w-10 items-center justify-center rounded-full border" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
               <div className="flex-1 overflow-y-auto px-3 py-4 sm:px-6 sm:py-6">
                 <div className="grid gap-8 lg:grid-cols-[0.6fr_0.4fr] lg:gap-8">
-                  <section className="overflow-hidden rounded-[28px] border border-white/10 bg-[#0B0F1F]/80 shadow-[0_24px_60px_rgba(0,0,0,0.35)]">
+                  <section className="overflow-hidden rounded-[28px] border shadow-[0_24px_60px_rgba(0,0,0,0.35)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
                     <div className="relative h-[340px] sm:h-[460px]">
                       <img
                         src={previewProfile.profilePhoto || previewProfile.photo || previewProfile.image || 'https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80'}
                         alt={previewProfile.fullName}
                         className="h-full w-full object-cover"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-[#090B14]/95 via-[#090B14]/45 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-[rgba(9,11,20,0.95)] via-[rgba(9,11,20,0.45)] to-transparent" />
                       <div className="absolute left-5 right-5 top-5 flex items-center justify-between">
-                        <div className="rounded-full border border-white/10 bg-[#111827]/70 px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em] text-[#D8D4FF]">CampusConnect</div>
-                        <div className="rounded-full border border-[#7C5CFF]/30 bg-[#7C5CFF]/15 px-3 py-1 text-sm font-semibold text-[#EDE8FF]">{previewMatchPct}%</div>
+                        <div className="rounded-full border px-3 py-1 text-xs font-semibold uppercase tracking-[0.24em]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)', color: 'var(--text-primary)' }}>CampusConnect</div>
+                        <div className="rounded-full border px-3 py-1 text-sm font-semibold" style={{ borderColor: 'var(--accent)', backgroundColor: 'rgba(124,92,255,0.16)', color: 'var(--text-primary)' }}>{previewMatchPct}%</div>
                       </div>
                       <div className="absolute bottom-6 left-5 right-5">
-                        <h3 className="text-3xl font-semibold text-white">{previewProfile.fullName}</h3>
-                        <p className="mt-2 text-sm text-[#D8D4FF]">{previewProfile.college || 'College'} • {previewProfile.branch || 'Branch'} • {previewProfile.year ? `Year ${previewProfile.year}` : 'Year unknown'}</p>
+                        <h3 className="text-3xl font-semibold" style={{ color: 'var(--text-primary)' }}>{previewProfile.fullName}</h3>
+                        <p className="mt-2 text-sm" style={{ color: 'var(--text-secondary)' }}>{previewProfile.college || 'College'} • {previewProfile.branch || 'Branch'} • {previewProfile.year ? `Year ${previewProfile.year}` : 'Year unknown'}</p>
                         <div className="mt-4 flex flex-wrap gap-2">
                           {previewInterests.slice(0, 6).map((interest, index) => (
-                            <span key={`${interest}-${index}`} className="rounded-full border border-white/10 bg-white/10 px-3 py-1.5 text-sm text-[#F8FAFC]">{interest}</span>
+                            <span key={`${interest}-${index}`} className="rounded-full border px-3 py-1.5 text-sm" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>{interest}</span>
                           ))}
                         </div>
                       </div>
                     </div>
 
                     <div className="p-6 sm:p-8">
-                      <div className="flex items-center gap-2 text-lg font-semibold text-white">
-                        <Sparkles className="h-5 w-5 text-[#A78BFA]" />
+                      <div className="flex items-center gap-2 text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>
+                        <Sparkles className="h-5 w-5" style={{ color: 'var(--accent-secondary)' }} />
                         <span>About</span>
                       </div>
-                      <p className="mt-4 text-[15px] leading-8 text-[#D8D4FF]">{previewProfile.bio || 'A thoughtful campus explorer looking for meaningful connections.'}</p>
-                      <div className="mt-6 flex items-center gap-2 text-[#B9B4D7]">
-                        <MapPin className="h-4 w-4 text-[#A78BFA]" />
+                      <p className="mt-4 text-[15px] leading-8" style={{ color: 'var(--text-secondary)' }}>{previewProfile.bio || 'A thoughtful campus explorer looking for meaningful connections.'}</p>
+                      <div className="mt-6 flex items-center gap-2" style={{ color: 'var(--text-secondary)' }}>
+                        <MapPin className="h-4 w-4" style={{ color: 'var(--accent-secondary)' }} />
                         <span>{previewProfile.location || previewProfile.city || previewProfile.town || 'Location unavailable'}</span>
                       </div>
                     </div>
                   </section>
 
                   <div className="space-y-6">
-                    <section className="w-full rounded-[28px] border border-white/10 bg-[#0B0F1F]/80 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] sm:p-8">
+                    <section className="w-full rounded-[28px] border p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] sm:p-8" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
                       <div className="flex items-center justify-between gap-3">
-                        <h4 className="text-xl font-semibold text-white">Gallery</h4>
-                        <span className="text-sm text-[#A1A1AA]">{previewPhotos.length} photos</span>
+                        <h4 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Gallery</h4>
+                        <span className="text-sm" style={{ color: 'var(--text-muted)' }}>{previewPhotos.length} photos</span>
                       </div>
                       <div className="mt-5 grid gap-3 sm:grid-cols-2">
                         {previewPhotos.length > 0 ? (
@@ -727,29 +734,29 @@ export default function Discover(){
                               key={`${photo}-${index}`}
                               type="button"
                               onClick={() => openPreviewPhotoViewer(index)}
-                              className="overflow-hidden rounded-[20px] border border-white/10 bg-[#111827]"
+                              className="overflow-hidden rounded-[20px] border" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}
                             >
                               <img src={photo} alt={`Photo ${index + 1}`} className="h-32 w-full object-cover transition hover:scale-105" />
                             </button>
                           ))
                         ) : (
-                          <div className="col-span-full rounded-[20px] border border-dashed border-white/10 bg-[#111827]/70 p-6 text-center text-sm text-[#A9ABC1]">No photos available yet.</div>
+                          <div className="col-span-full rounded-[20px] border border-dashed p-6 text-center text-sm" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-muted)' }}>No photos available yet.</div>
                         )}
                       </div>
                     </section>
 
-                    <section className="w-full rounded-[28px] border border-white/10 bg-[#0B0F1F]/80 p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] sm:p-8">
-                      <h4 className="text-xl font-semibold text-white">Why you match</h4>
+                    <section className="w-full rounded-[28px] border p-6 shadow-[0_24px_60px_rgba(0,0,0,0.35)] sm:p-8" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
+                      <h4 className="text-xl font-semibold" style={{ color: 'var(--text-primary)' }}>Why you match</h4>
                       <ul className="mt-4 space-y-3">
                         {previewCompatibilityReasons.length > 0 ? (
                           previewCompatibilityReasons.map((reason, index) => (
-                            <li key={`${reason}-${index}`} className="flex items-start gap-2 text-sm text-[#D8D4FF]">
-                              <span className="mt-1 text-[#7C5CFF]">✔</span>
+                            <li key={`${reason}-${index}`} className="flex items-start gap-2 text-sm" style={{ color: 'var(--text-secondary)' }}>
+                              <span className="mt-1" style={{ color: 'var(--accent)' }}>✔</span>
                               <span>{reason}</span>
                             </li>
                           ))
                         ) : (
-                          <li className="text-sm text-[#A1A1AA]">Compatibility insights will appear as more profile details are shared.</li>
+                          <li className="text-sm" style={{ color: 'var(--text-muted)' }}>Compatibility insights will appear as more profile details are shared.</li>
                         )}
                       </ul>
                     </section>

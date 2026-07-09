@@ -40,17 +40,18 @@ export default function MatchCard({ match }) {
       transition={{ duration: 0.2, ease: 'easeOut' }}
       onClick={openChat}
       onKeyDown={(e) => (e.key === 'Enter' ? openChat() : null)}
-      className="group relative overflow-hidden rounded-[28px] border border-white/10 bg-[linear-gradient(135deg,rgba(17,24,39,0.95),rgba(11,15,28,0.95))] p-5 shadow-[0_20px_60px_rgba(0,0,0,0.22)] backdrop-blur-3xl"
+      className="group relative overflow-hidden rounded-[28px] border p-5 shadow-[0_20px_60px_rgba(0,0,0,0.22)] backdrop-blur-3xl"
+      style={{ borderColor: 'var(--border-primary)', background: 'linear-gradient(135deg, var(--card-bg), var(--surface-bg))' }}
     >
       <div className="absolute inset-0 bg-gradient-to-br from-[#7C5CFF]/8 via-transparent to-[#A78BFA]/5" />
       <div className="relative flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div className="flex min-w-0 flex-1 items-start gap-4">
           <div className="relative flex-shrink-0">
-            <div className="h-20 w-20 overflow-hidden rounded-full border-2 border-[#7C5CFF]/30 bg-[#111827] transition-transform duration-200 group-hover:scale-105 sm:h-24 sm:w-24">
+            <div className="h-20 w-20 overflow-hidden rounded-full border-2 transition-transform duration-200 group-hover:scale-105 sm:h-24 sm:w-24" style={{ borderColor: 'var(--accent)', backgroundColor: 'var(--surface-bg)' }}>
               {match.profilePhoto ? (
                 <img src={match.profilePhoto} alt={match.fullName} className="h-full w-full object-cover" />
               ) : (
-                <div className="flex h-full w-full items-center justify-center text-lg font-semibold text-[#A78BFA]">{match.fullName?.[0] || 'U'}</div>
+                <div className="flex h-full w-full items-center justify-center text-lg font-semibold" style={{ color: 'var(--accent-secondary)' }}>{match.fullName?.[0] || 'U'}</div>
               )}
             </div>
             <span className={`absolute -bottom-0.5 -right-0.5 h-4 w-4 rounded-full border-2 border-[#0B0F1F] ${match.online ? 'bg-emerald-400' : 'bg-[#64748B]'}`} />
@@ -58,7 +59,7 @@ export default function MatchCard({ match }) {
 
           <div className="min-w-0 flex-1">
             <div className="flex flex-wrap items-center gap-2">
-              <h3 className="truncate text-lg font-semibold text-white">{match.fullName}{match.age ? `, ${match.age}` : ''}</h3>
+              <h3 className="truncate text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{match.fullName}{match.age ? `, ${match.age}` : ''}</h3>
               {match.compatibilityScore != null && (
                 <button
                   type="button"
@@ -66,45 +67,46 @@ export default function MatchCard({ match }) {
                     e.stopPropagation()
                     setShowCompatibility((prev) => !prev)
                   }}
-                  className="rounded-full border border-[#7C5CFF]/20 bg-[#111827]/80 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] text-[#D8D4FF] transition hover:bg-[#1c2140]"
+                  className="rounded-full border px-2.5 py-1 text-[11px] font-semibold uppercase tracking-[0.2em] transition"
+                  style={{ borderColor: 'var(--accent)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}
                 >
                   {match.compatibilityScore}%
                 </button>
               )}
             </div>
 
-            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm text-[#A9ABC1]">
+            <div className="mt-2 flex flex-wrap items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
               <span>{match.college || 'College'}</span>
               {match.branch ? <><span>•</span><span>{match.branch}</span></> : null}
             </div>
 
-            <div className="mt-3 flex items-center gap-2 text-xs font-medium text-[#D8D4FF]">
+            <div className="mt-3 flex items-center gap-2 text-xs font-medium" style={{ color: 'var(--text-secondary)' }}>
               <span className={`h-2.5 w-2.5 rounded-full ${match.online ? 'bg-emerald-400' : 'bg-[#64748B]'}`} />
               <span>{onlineLabel}</span>
             </div>
 
             <div className="mt-4 flex flex-wrap gap-2">
               {interests.length > 0 ? interests.map((interest) => (
-                <span key={interest} className="rounded-full border border-white/10 bg-[#111827]/80 px-3 py-1 text-xs font-medium text-[#D8D4FF]">
+                <span key={interest} className="rounded-full border px-3 py-1 text-xs font-medium" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}>
                   {interest}
                 </span>
               )) : (
-                <span className="rounded-full border border-dashed border-white/10 bg-[#111827]/60 px-3 py-1 text-xs text-[#A9ABC1]">
+                <span className="rounded-full border border-dashed px-3 py-1 text-xs" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-muted)' }}>
                   Shared interests coming soon
                 </span>
               )}
             </div>
 
-            <div className="mt-4 rounded-[18px] border border-white/10 bg-[#111827]/70 p-3">
-              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em] text-[#A78BFA]">
+            <div className="mt-4 rounded-[18px] border p-3" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}>
+              <div className="flex items-center gap-2 text-[11px] uppercase tracking-[0.2em]" style={{ color: 'var(--accent-secondary)' }}>
                 <Sparkles className="h-3.5 w-3.5" />
                 <span>Latest message</span>
               </div>
-              <p className="mt-2 line-clamp-2 text-sm leading-6 text-[#D8D4FF]">{previewText}</p>
+              <p className="mt-2 line-clamp-2 text-sm leading-6" style={{ color: 'var(--text-secondary)' }}>{previewText}</p>
             </div>
 
-            <div className="mt-4 flex items-center gap-2 text-sm text-[#94A3B8]">
-              <Clock3 className="h-4 w-4 text-[#A78BFA]" />
+            <div className="mt-4 flex items-center gap-2 text-sm" style={{ color: 'var(--text-muted)' }}>
+              <Clock3 className="h-4 w-4" style={{ color: 'var(--accent-secondary)' }} />
               <span>{matchedLabel}</span>
             </div>
           </div>
@@ -130,7 +132,7 @@ export default function MatchCard({ match }) {
       </div>
 
       {showCompatibility && match.compatibilityScore != null && (
-        <div className="mt-4 rounded-[20px] border border-white/10 bg-[#0B0F1F]/70 p-4">
+        <div className="mt-4 rounded-[20px] border p-4" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}>
           <CompatibilityBreakdown currentUser={currentUser} otherUser={match} score={match.compatibilityScore} defaultOpen />
         </div>
       )}

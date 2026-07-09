@@ -70,7 +70,8 @@ export default function FilterDrawer({ open, onClose, onApply, initialFilters = 
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[45] bg-[#02040b]/70 backdrop-blur-sm"
+            className="fixed inset-0 z-[45] backdrop-blur-sm"
+            style={{ backgroundColor: 'rgba(2, 4, 11, 0.7)' }}
             onClick={onClose}
           />
           <motion.aside
@@ -78,41 +79,42 @@ export default function FilterDrawer({ open, onClose, onApply, initialFilters = 
             animate={{ x: 0 }}
             exit={{ x: '100%' }}
             transition={{ type: 'spring', stiffness: 220, damping: 24 }}
-            className="fixed right-0 top-0 z-[60] flex h-full w-full max-w-[420px] flex-col border-l border-white/10 bg-[#060814]/95 p-5 shadow-[0_30px_90px_rgba(0,0,0,0.45)] backdrop-blur-3xl"
+            className="fixed right-0 top-0 z-[60] flex h-full w-full max-w-[420px] flex-col border-l p-5 shadow-[0_30px_90px_rgba(0,0,0,0.45)] backdrop-blur-3xl"
+            style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-elevated)' }}
             onClick={(event) => event.stopPropagation()}
             onMouseDown={(event) => event.stopPropagation()}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <h2 className="text-2xl font-semibold text-white">Filters</h2>
-                <p className="mt-1 text-sm text-[#94A3B8]">Find people that match your preferences.</p>
+                <h2 className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>Filters</h2>
+                <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>Find people that match your preferences.</p>
               </div>
-              <button type="button" onClick={(event) => { event.stopPropagation(); onClose?.() }} className="relative z-[70] rounded-full border border-white/10 bg-white/5 p-2 text-[#D8D4FF] transition hover:bg-white/10 pointer-events-auto">
+              <button type="button" onClick={(event) => { event.stopPropagation(); onClose?.() }} className="relative z-[70] rounded-full border p-2 transition pointer-events-auto" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}>
                 <X className="h-4 w-4" />
               </button>
             </div>
 
             <div className="mt-5 flex flex-wrap gap-2">
-              {activeChips.length > 0 ? activeChips.map((chip) => <FilterChip key={chip} label={chip} onRemove={() => {}} />) : <span className="text-sm text-[#94A3B8]">No filters applied yet.</span>}
+              {activeChips.length > 0 ? activeChips.map((chip) => <FilterChip key={chip} label={chip} onRemove={() => {}} />) : <span className="text-sm" style={{ color: 'var(--text-muted)' }}>No filters applied yet.</span>}
             </div>
 
             <div className="mt-5 flex-1 space-y-4 overflow-y-auto pr-1">
               <FilterSection title="College" subtitle="Filter by institution">
-                <select value={filters.college || ''} onChange={(event) => updateFilter('college', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-[#0E1324] px-3 py-2.5 text-sm text-white outline-none">
+                <select value={filters.college || ''} onChange={(event) => updateFilter('college', event.target.value)} className="w-full rounded-2xl border px-3 py-2.5 text-sm outline-none" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>
                   <option value="">Any college</option>
                   {collegeOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
               </FilterSection>
 
               <FilterSection title="Branch" subtitle="Filter by specialization">
-                <select value={filters.branch || ''} onChange={(event) => updateFilter('branch', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-[#0E1324] px-3 py-2.5 text-sm text-white outline-none">
+                <select value={filters.branch || ''} onChange={(event) => updateFilter('branch', event.target.value)} className="w-full rounded-2xl border px-3 py-2.5 text-sm outline-none" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>
                   <option value="">Any branch</option>
                   {branchOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
               </FilterSection>
 
               <FilterSection title="Year" subtitle="Filter by academic year">
-                <select value={filters.year || ''} onChange={(event) => updateFilter('year', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-[#0E1324] px-3 py-2.5 text-sm text-white outline-none">
+                <select value={filters.year || ''} onChange={(event) => updateFilter('year', event.target.value)} className="w-full rounded-2xl border px-3 py-2.5 text-sm outline-none" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>
                   <option value="">Any year</option>
                   {yearOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
@@ -120,7 +122,7 @@ export default function FilterDrawer({ open, onClose, onApply, initialFilters = 
 
               <FilterSection title="Age Range" subtitle="Narrow by age">
                 <div className="space-y-3">
-                  <div className="flex items-center justify-between text-sm text-[#D8D4FF]">
+                  <div className="flex items-center justify-between text-sm" style={{ color: 'var(--text-secondary)' }}>
                     <span>{filters.ageRange?.[0] ?? 18}</span>
                     <span>{filters.ageRange?.[1] ?? 30}</span>
                   </div>
@@ -144,13 +146,13 @@ export default function FilterDrawer({ open, onClose, onApply, initialFilters = 
               </FilterSection>
 
               <FilterSection title="Gender" subtitle="Filter by gender">
-                <select value={filters.gender || 'Any'} onChange={(event) => updateFilter('gender', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-[#0E1324] px-3 py-2.5 text-sm text-white outline-none">
+                <select value={filters.gender || 'Any'} onChange={(event) => updateFilter('gender', event.target.value)} className="w-full rounded-2xl border px-3 py-2.5 text-sm outline-none" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>
                   {genderOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
               </FilterSection>
 
               <FilterSection title="Looking For" subtitle="Match by relationship style">
-                <select value={filters.lookingFor || ''} onChange={(event) => updateFilter('lookingFor', event.target.value)} className="w-full rounded-2xl border border-white/10 bg-[#0E1324] px-3 py-2.5 text-sm text-white outline-none">
+                <select value={filters.lookingFor || ''} onChange={(event) => updateFilter('lookingFor', event.target.value)} className="w-full rounded-2xl border px-3 py-2.5 text-sm outline-none" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-primary)' }}>
                   <option value="">Any</option>
                   {lookingForOptions.map((option) => <option key={option} value={option}>{option}</option>)}
                 </select>
@@ -165,7 +167,8 @@ export default function FilterDrawer({ open, onClose, onApply, initialFilters = 
                         key={interest}
                         type="button"
                         onClick={() => toggleInterest(interest)}
-                        className={`rounded-full border px-3 py-1.5 text-sm transition ${active ? 'border-[#7C5CFF] bg-[#7C5CFF]/15 text-white' : 'border-white/10 bg-white/5 text-[#D8D4FF] hover:border-[#7C5CFF]/40'}`}
+                        className={`rounded-full border px-3 py-1.5 text-sm transition ${active ? '' : ''}`}
+                        style={active ? { borderColor: 'var(--accent)', backgroundColor: 'rgba(124,92,255,0.16)', color: 'var(--text-primary)' } : { borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}
                       >
                         {interest}
                       </button>
@@ -188,11 +191,11 @@ export default function FilterDrawer({ open, onClose, onApply, initialFilters = 
               </FilterSection>
             </div>
 
-            <div className="mt-5 flex items-center gap-3 border-t border-white/10 pt-4">
-              <button type="button" onClick={resetFilters} className="flex-1 rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-[#D8D4FF] transition hover:bg-white/10">
+            <div className="mt-5 flex items-center gap-3 border-t pt-4" style={{ borderColor: 'var(--border-primary)' }}>
+              <button type="button" onClick={resetFilters} className="flex-1 rounded-2xl border px-4 py-3 text-sm font-semibold transition" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}>
                 Reset Filters
               </button>
-              <button type="button" onClick={apply} className="flex-1 rounded-2xl bg-gradient-to-r from-[#7C5CFF] to-[#9F7AEA] px-4 py-3 text-sm font-semibold text-white shadow-[0_10px_28px_rgba(124,92,255,0.25)] transition hover:brightness-110">
+              <button type="button" onClick={apply} className="flex-1 rounded-2xl px-4 py-3 text-sm font-semibold shadow-[0_10px_28px_rgba(124,92,255,0.25)] transition hover:brightness-110" style={{ backgroundImage: 'linear-gradient(135deg, var(--accent), var(--accent-secondary))', color: 'var(--surface-elevated)' }}>
                 Apply Filters
               </button>
             </div>

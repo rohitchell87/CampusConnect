@@ -13,20 +13,20 @@ export default function CompatibilityBreakdown({ currentUser, otherUser, score, 
   }, [currentUser, otherUser, score])
 
   return (
-    <div className="rounded-[24px] border border-white/10 bg-[rgba(9,11,20,0.88)]/90 p-4 shadow-[0_16px_50px_rgba(0,0,0,0.28)] backdrop-blur-2xl">
+    <div className="rounded-[24px] border p-4 shadow-[0_16px_50px_rgba(0,0,0,0.28)] backdrop-blur-2xl" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)' }}>
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
         className="flex w-full items-center justify-between gap-3 text-left"
       >
         <div>
-          <div className="flex items-center gap-2 text-sm font-semibold text-[#EDE8FF]">
-            <Sparkles className="h-4 w-4 text-[#A78BFA]" />
+          <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+            <Sparkles className="h-4 w-4" style={{ color: 'var(--accent-secondary)' }} />
             <span>✨ Why You Match</span>
           </div>
-          <p className="mt-1 text-sm text-[#A9ABC1]">Here&apos;s what you have in common.</p>
+          <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>Here&apos;s what you have in common.</p>
         </div>
-        <div className="rounded-full border border-[#7C5CFF]/20 bg-[#111429] px-3 py-1 text-sm font-semibold text-[#D8D4FF]">
+        <div className="rounded-full border px-3 py-1 text-sm font-semibold" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}>
           {insight.score}%
         </div>
       </button>
@@ -44,20 +44,20 @@ export default function CompatibilityBreakdown({ currentUser, otherUser, score, 
               <div className="rounded-[20px] border border-white/10 bg-[#12162b]/80 p-4">
                 <div className="flex items-center justify-between gap-3">
                   <div>
-                    <p className="text-sm font-semibold text-white">Compatibility breakdown</p>
-                    <p className="mt-1 text-sm text-[#A9ABC1]">{insight.summary || 'You share a lot of great energy.'}</p>
+                    <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>Compatibility breakdown</p>
+                    <p className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>{insight.summary || 'You share a lot of great energy.'}</p>
                   </div>
-                  <div className="text-2xl font-semibold text-[#EDE8FF]">{insight.score}%</div>
+                  <div className="text-2xl font-semibold" style={{ color: 'var(--text-primary)' }}>{insight.score}%</div>
                 </div>
 
                 <div className="mt-4 space-y-3">
                   {insight.breakdown.map((item, index) => (
                     <div key={`${item.label}-${index}`}>
-                      <div className="mb-1 flex items-center justify-between text-sm text-[#D8D4FF]">
+                      <div className="mb-1 flex items-center justify-between text-sm" style={{ color: 'var(--text-secondary)' }}>
                         <span>{item.label}</span>
                         <span>{item.percent}%</span>
                       </div>
-                      <div className="h-2 overflow-hidden rounded-full bg-[#1A2034]">
+                      <div className="h-2 overflow-hidden rounded-full" style={{ backgroundColor: 'var(--surface-bg)' }}>
                         <motion.div
                           initial={{ width: 0 }}
                           animate={{ width: `${item.percent}%` }}
@@ -70,9 +70,9 @@ export default function CompatibilityBreakdown({ currentUser, otherUser, score, 
                 </div>
               </div>
 
-              <div className="rounded-[20px] border border-white/10 bg-[#12162b]/80 p-4">
-                <div className="flex items-center gap-2 text-sm font-semibold text-white">
-                  <Sparkles className="h-4 w-4 text-[#A78BFA]" />
+              <div className="rounded-[20px] border p-4" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}>
+                <div className="flex items-center gap-2 text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>
+                  <Sparkles className="h-4 w-4" style={{ color: 'var(--accent-secondary)' }} />
                   <span>What stands out</span>
                 </div>
                 <div className="mt-3 space-y-3">
@@ -82,18 +82,18 @@ export default function CompatibilityBreakdown({ currentUser, otherUser, score, 
                       initial={{ opacity: 0, y: 8 }}
                       animate={{ opacity: 1, y: 0 }}
                       transition={{ duration: 0.2, delay: index * 0.06 }}
-                      className="rounded-[16px] border border-white/10 bg-[#0F1426]/80 p-3"
+                      className="rounded-[16px] border p-3" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}
                     >
                       <div className="flex items-start gap-3">
                         <div className="mt-0.5 text-lg">{reason.icon}</div>
                         <div>
-                          <p className="text-sm font-semibold text-[#F8FAFC]">{reason.title}</p>
-                          <p className="mt-1 text-sm leading-6 text-[#A9ABC1]">{reason.detail}</p>
+                          <p className="text-sm font-semibold" style={{ color: 'var(--text-primary)' }}>{reason.title}</p>
+                          <p className="mt-1 text-sm leading-6" style={{ color: 'var(--text-muted)' }}>{reason.detail}</p>
                         </div>
                       </div>
                     </motion.div>
                   )) : (
-                    <div className="rounded-[16px] border border-dashed border-white/10 bg-[#0F1426]/70 p-3 text-sm leading-7 text-[#A9ABC1]">
+                    <div className="rounded-[16px] border border-dashed p-3 text-sm leading-7" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)', color: 'var(--text-muted)' }}>
                       You both have different interests, which could make conversations more interesting.
                     </div>
                   )}

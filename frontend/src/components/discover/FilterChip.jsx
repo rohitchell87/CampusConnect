@@ -5,10 +5,11 @@ export default function FilterChip({ label, onRemove }) {
     <button
       type="button"
       onClick={onRemove}
-      className="inline-flex items-center gap-2 rounded-full border border-[#7C5CFF]/30 bg-[#7C5CFF]/10 px-3 py-1.5 text-sm font-medium text-[#EDE8FF] transition hover:bg-[#7C5CFF]/20"
+      className="inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-sm font-medium transition"
+      style={{ borderColor: 'var(--accent)', backgroundColor: 'rgba(124,92,255,0.16)', color: 'var(--text-primary)' }}
     >
       <span>{label}</span>
-      <span className="text-xs text-[#D8D4FF]">×</span>
+      <span className="text-xs" style={{ color: 'var(--text-secondary)' }}>×</span>
     </button>
   )
 }

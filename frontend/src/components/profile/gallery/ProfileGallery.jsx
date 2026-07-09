@@ -29,7 +29,7 @@ export default function ProfileGallery({ photos = [], onAddPhotos, emptyTitle = 
         subtitle={emptySubtitle}
         buttonLabel="Upload Photos"
         onClick={onAddPhotos}
-        className="border border-white/10 bg-[#111827]/80 p-8 shadow-[0_16px_40px_rgba(0,0,0,0.18)]"
+        className="border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] p-8 shadow-[0_16px_40px_rgba(0,0,0,0.18)]"
       />
     )
   }

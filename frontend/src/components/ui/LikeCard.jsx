@@ -31,23 +31,24 @@ export default function LikeCard({ user }){
       role="button"
       tabIndex={0}
       onClick={()=>navigate(`/chat?matchId=${user.matchId || ''}&userId=${user.userId}`)}
-      className="group flex flex-col justify-between overflow-hidden rounded-[24px] border border-white/6 bg-[rgba(11,13,23,0.6)] p-5 shadow-[0_12px_40px_rgba(124,92,255,0.08)] transition-transform hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(124,92,255,0.14)]"
+      className="group flex flex-col justify-between overflow-hidden rounded-[24px] border p-5 shadow-[0_12px_40px_rgba(124,92,255,0.08)] transition-transform hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(124,92,255,0.14)]"
+      style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}
     >
       <div className="flex items-start gap-4">
         <div className="relative flex-shrink-0">
-          <div className="h-28 w-28 overflow-hidden rounded-xl border-2 border-[#1B1F35] bg-[#0B0D17] transition-transform group-hover:scale-105">
+          <div className="h-28 w-28 overflow-hidden rounded-xl border-2 transition-transform group-hover:scale-105" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}>
             {user.profilePhoto ? (
               <img src={user.profilePhoto} alt={user.fullName} className="h-full w-full object-cover" />
             ) : (
-              <div className="flex h-full w-full items-center justify-center text-[#7C5CFF] font-semibold">{user.fullName?.[0] || 'U'}</div>
+              <div className="flex h-full w-full items-center justify-center font-semibold" style={{ color: 'var(--accent)' }}>{user.fullName?.[0] || 'U'}</div>
             )}
           </div>
-          <span className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border border-[#0B0D17] ${user.online ? 'bg-emerald-400' : 'bg-[#64748B]'}`} />
+          <span className={`absolute -bottom-1 -right-1 h-3 w-3 rounded-full border ${user.online ? 'bg-emerald-400' : 'bg-[#64748B]'}`} style={{ borderColor: 'var(--surface-bg)' }} />
         </div>
 
         <div className="min-w-0 flex-1">
           <div className="flex items-center gap-3">
-            <h3 className="truncate text-lg font-semibold text-white">{user.fullName}{user.age ? `, ${user.age}` : ''}</h3>
+            <h3 className="truncate text-lg font-semibold" style={{ color: 'var(--text-primary)' }}>{user.fullName}{user.age ? `, ${user.age}` : ''}</h3>
             {user.compatibilityScore != null && (
               <button
                 type="button"
@@ -55,16 +56,17 @@ export default function LikeCard({ user }){
                   e.stopPropagation()
                   setShowCompatibility((prev) => !prev)
                 }}
-                className="ml-auto rounded-full bg-[#1B1434] px-2 py-1 text-xs font-semibold text-[#D8D4FF] transition hover:bg-[#241a49]"
+                className="ml-auto rounded-full px-2 py-1 text-xs font-semibold transition"
+                style={{ backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}
               >
                 {user.compatibilityScore}%
               </button>
             )}
           </div>
-          <div className="mt-1 text-sm text-[#94A3B8]">{user.college || user.branch}</div>
+          <div className="mt-1 text-sm" style={{ color: 'var(--text-muted)' }}>{user.college || user.branch}</div>
           <div className="mt-3 flex flex-wrap gap-2">
             {(user.mutualInterests || []).slice(0,3).map((i) => (
-              <span key={i} className="rounded-full bg-[#111827] px-3 py-1 text-xs text-[#D8D4FF]">{i}</span>
+              <span key={i} className="rounded-full px-3 py-1 text-xs" style={{ backgroundColor: 'var(--surface-bg)', color: 'var(--text-secondary)' }}>{i}</span>
             ))}
           </div>
         </div>

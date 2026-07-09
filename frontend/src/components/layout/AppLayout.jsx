@@ -18,8 +18,9 @@ export default function AppLayout() {
 
   return (
     <div
-      className="bg-[#090B14] text-white"
+      className="min-h-screen text-[var(--text-primary)]"
       style={{
+        backgroundColor: 'var(--bg-primary)',
         backgroundImage:
           'radial-gradient(circle at top, rgba(99,102,241,0.08), transparent 35%)',
       }}

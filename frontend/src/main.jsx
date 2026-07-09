@@ -10,12 +10,12 @@ import { ThemeProvider } from './context/ThemeContext'
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <App />
-          <Toaster position="top-right" />
-        </AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+  <AuthProvider>
+    <ThemeProvider>
+      <App />
+      <Toaster position="top-right" />
+    </ThemeProvider>
+  </AuthProvider>
+</BrowserRouter>
   </React.StrictMode>
 )

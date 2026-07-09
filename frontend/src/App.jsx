@@ -9,7 +9,7 @@ export default function App() {
   const isAuthRoute = ['/login', '/register'].includes(location.pathname)
 
   return (
-    <div className="app-shell bg-[#090909] text-white">
+    <div className="app-shell" style={{ backgroundColor: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
       {isAuthRoute && <Navbar />}
       <main className={`page-container ${isAuthRoute ? 'flex-1 flex items-center justify-center py-0' : 'flex-1'}`}>
         <ErrorBoundary>

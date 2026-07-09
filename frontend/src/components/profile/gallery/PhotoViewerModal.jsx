@@ -26,7 +26,7 @@ export default function PhotoViewerModal({ open, photos, currentIndex, onClose, 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
-        className="fixed inset-0 z-[60] flex items-center justify-center bg-[#06070d]/85 px-3 py-4 backdrop-blur-xl"
+        className="fixed inset-0 z-[60] flex items-center justify-center bg-[color:var(--bg-primary)]/85 px-3 py-4 backdrop-blur-xl"
         onClick={onClose}
       >
         <motion.div
@@ -40,34 +40,34 @@ export default function PhotoViewerModal({ open, photos, currentIndex, onClose, 
           <button
             type="button"
             onClick={onClose}
-            className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#0b0f1e]/80 text-white shadow-lg transition hover:border-[#7C5CFF]/40 hover:bg-[#14182c]"
+            className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/80 text-[color:var(--text-primary)] shadow-lg transition hover:border-[color:var(--accent-secondary)]/40 hover:bg-[color:var(--surface-bg)]"
           >
             <X className="h-5 w-5" />
           </button>
 
-          <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#090b14] shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
-            <div className="flex items-center justify-between border-b border-white/10 px-4 py-3 text-sm text-[#D8D4FF] sm:px-5">
+          <div className="overflow-hidden rounded-[28px] border border-[color:var(--border-primary)] bg-[color:var(--card-bg)] shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
+            <div className="flex items-center justify-between border-b border-[color:var(--border-primary)] px-4 py-3 text-sm text-[color:var(--text-secondary)] sm:px-5">
               <div className="flex items-center gap-2">
-                <ImageIcon className="h-4 w-4 text-[#A78BFA]" />
+                <ImageIcon className="h-4 w-4 text-[color:var(--accent-secondary)]" />
                 <span>{currentIndex + 1} / {photos.length}</span>
               </div>
-              <span className="text-[#A1A1AA]">Fullscreen view</span>
+              <span className="text-[color:var(--text-muted)]">Fullscreen view</span>
             </div>
 
-            <div className="relative flex items-center justify-center bg-[#06070d] p-3 sm:p-6">
+            <div className="relative flex items-center justify-center bg-[color:var(--surface-bg)] p-3 sm:p-6">
               {photos.length > 1 && (
                 <>
                   <button
                     type="button"
                     onClick={onPrev}
-                    className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0b0f1e]/80 text-white shadow-lg transition hover:border-[#7C5CFF]/40 hover:bg-[#14182c]"
+                    className="absolute left-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/80 text-[color:var(--text-primary)] shadow-lg transition hover:border-[color:var(--accent-secondary)]/40 hover:bg-[color:var(--surface-bg)]"
                   >
                     <ChevronLeft className="h-5 w-5" />
                   </button>
                   <button
                     type="button"
                     onClick={onNext}
-                    className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-[#0b0f1e]/80 text-white shadow-lg transition hover:border-[#7C5CFF]/40 hover:bg-[#14182c]"
+                    className="absolute right-3 top-1/2 z-10 flex h-11 w-11 -translate-y-1/2 items-center justify-center rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/80 text-[color:var(--text-primary)] shadow-lg transition hover:border-[color:var(--accent-secondary)]/40 hover:bg-[color:var(--surface-bg)]"
                   >
                     <ChevronRight className="h-5 w-5" />
                   </button>

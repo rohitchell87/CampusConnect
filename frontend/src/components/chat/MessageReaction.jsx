@@ -18,7 +18,8 @@ export default function MessageReaction({ messageId, onReact }) {
       <button
         type="button"
         onClick={() => setOpen((prev) => !prev)}
-        className="rounded-full border border-white/10 bg-[#0b0d17]/70 px-2 py-1 text-[11px] text-[#D8D4FF] transition hover:bg-[#141830]"
+        className="rounded-full border px-2 py-1 text-[11px] chat-secondary transition"
+        style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}
       >
         +
       </button>
@@ -30,10 +31,11 @@ export default function MessageReaction({ messageId, onReact }) {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 6, scale: 0.96 }}
             transition={{ duration: 0.16 }}
-            className="absolute bottom-8 left-0 z-10 flex gap-1 rounded-full border border-white/10 bg-[#0f1428] p-1 shadow-lg"
+            className="absolute bottom-8 left-0 z-10 flex gap-1 rounded-full border p-1 shadow-lg"
+            style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-bg)' }}
           >
             {reactions.map((emoji) => (
-              <button key={emoji} type="button" onClick={() => handleSelect(emoji)} className="rounded-full px-2 py-1 text-sm transition hover:bg-white/10">
+              <button key={emoji} type="button" onClick={() => handleSelect(emoji)} className="rounded-full px-2 py-1 text-sm transition hover:bg-[var(--surface-elevated)]">
                 {emoji}
               </button>
             ))}

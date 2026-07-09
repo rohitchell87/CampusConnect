@@ -1,9 +1,10 @@
 import React, { useState } from 'react'
 import { Mail, Lock, Bell, Moon, Eye, LogOut, Shield, Download, Trash2 } from 'lucide-react'
+import { useTheme } from '../../context/ThemeContext'
 
 export default function Settings() {
+  const { theme, toggleTheme } = useTheme()
   const [preferences, setPreferences] = useState({
-    darkMode: true,
     pushNotifications: true,
     emailNotifications: true,
     showOnlineStatus: false,
@@ -17,28 +18,36 @@ export default function Settings() {
     <button
       onClick={onChange}
       className={`relative h-6 w-11 rounded-full transition-all flex-shrink-0 ${
-        enabled ? 'bg-[#9B6DFF]' : 'bg-white/10'
+        enabled ? '' : ''
       }`}
+      style={{
+        backgroundColor: enabled ? 'var(--accent-secondary)' : 'var(--border-primary)',
+      }}
     >
       <div
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+        className={`absolute top-0.5 h-5 w-5 rounded-full transition-transform ${
           enabled ? 'translate-x-5' : 'translate-x-0.5'
         }`}
+        style={{ backgroundColor: 'var(--card-bg)' }}
       />
     </button>
   )
 
   const SettingsRow = ({ icon: Icon, title, description, control }) => (
-    <div className="flex items-center justify-between gap-6 py-4 px-6 hover:bg-white/[0.03] transition-colors cursor-pointer min-h-[72px]">
+    <div className="flex items-center justify-between gap-6 py-4 px-6 transition-colors cursor-pointer min-h-[72px]"
+      style={{ backgroundColor: 'transparent', borderBottom: '1px solid var(--border-primary)' }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-bg)')}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+    >
       <div className="flex items-start gap-4 flex-1">
-        <div className="flex-shrink-0 text-[#9B6DFF] mt-1">
+        <div className="flex-shrink-0 mt-1" style={{ color: 'var(--accent-secondary)' }}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="space-y-1 flex-1">
-          <h3 className="text-sm font-medium text-white">
+          <h3 className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
             {title}
           </h3>
-          <p className="text-xs text-[#8B8B9F]">
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             {description}
           </p>
         </div>
@@ -50,21 +59,30 @@ export default function Settings() {
   )
 
   const SettingsButton = ({ icon: Icon, title, description, isDestructive = false }) => (
-    <button className={`w-full flex items-center justify-between gap-6 py-4 px-6 hover:bg-white/[0.03] transition-colors min-h-[72px] group border-b border-white/5 last:border-b-0`}>
+    <button
+      className={`w-full flex items-center justify-between gap-6 py-4 px-6 transition-colors min-h-[72px] group last:border-b-0`}
+      style={{ backgroundColor: 'transparent', borderBottom: '1px solid var(--border-primary)' }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-bg)')}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+    >
       <div className="flex items-start gap-4 flex-1">
-        <div className={`flex-shrink-0 mt-1 ${isDestructive ? 'text-red-500' : 'text-[#9B6DFF]'}`}>
+        <div className={`flex-shrink-0 mt-1 ${isDestructive ? 'text-red-500' : ''}`} style={{ color: isDestructive ? 'var(--danger)' : 'var(--accent-secondary)' }}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="space-y-1 text-left flex-1">
-          <h3 className={`text-sm font-medium ${isDestructive ? 'text-red-500' : 'text-white'}`}>
+          <h3 className="text-sm font-medium" style={{ color: isDestructive ? 'var(--danger)' : 'var(--text-primary)' }}>
             {title}
           </h3>
-          <p className="text-xs text-[#8B8B9F]">
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             {description}
           </p>
         </div>
       </div>
-      <span className={`flex-shrink-0 text-lg ${isDestructive ? 'text-red-500 group-hover:text-red-400' : 'text-[#8B8B9F] group-hover:text-white'} transition-colors`}>
+      <span className="flex-shrink-0 text-lg transition-colors"
+        style={{ color: isDestructive ? 'var(--danger)' : 'var(--text-secondary)' }}
+        onMouseEnter={(e) => { if (!isDestructive) e.currentTarget.style.color = 'var(--text-primary)' }}
+        onMouseLeave={(e) => { if (!isDestructive) e.currentTarget.style.color = 'var(--text-secondary)' }}
+      >
         →
       </span>
     </button>
@@ -74,31 +92,31 @@ export default function Settings() {
     <div className="space-y-10">
       {/* Header */}
       <div>
-        <p className="text-sm uppercase tracking-[0.3em] text-[#8B5CF6] mb-2">
+        <p className="text-sm uppercase tracking-[0.3em] mb-2" style={{ color: 'var(--accent-secondary)' }}>
           Account
         </p>
-        <h1 className="text-4xl font-bold text-white">
+        <h1 className="text-4xl font-bold" style={{ color: 'var(--text-primary)' }}>
           Settings
         </h1>
       </div>
 
       {/* Preferences Card */}
-      <div className="rounded-3xl border border-white/10 bg-[#141414] shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
-        <div className="px-8 py-6 border-b border-white/5">
-          <h2 className="text-lg font-bold text-white">
+      <div className="rounded-3xl border shadow-[0_30px_60px_rgba(0,0,0,0.3)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
+        <div className="px-8 py-6 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
             Preferences
           </h2>
         </div>
 
-        <div className="divide-y divide-white/5">
+        <div>
           <SettingsRow
             icon={Moon}
             title="Dark Mode"
             description="Use the dark appearance"
             control={
               <ToggleSwitch
-                enabled={preferences.darkMode}
-                onChange={() => togglePreference('darkMode')}
+                enabled={theme === 'dark'}
+                onChange={toggleTheme}
               />
             }
           />
@@ -142,14 +160,14 @@ export default function Settings() {
       </div>
 
       {/* Security & Account Card */}
-      <div className="rounded-3xl border border-white/10 bg-[#141414] shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
-        <div className="px-8 py-6 border-b border-white/5">
-          <h2 className="text-lg font-bold text-white">
+      <div className="rounded-3xl border shadow-[0_30px_60px_rgba(0,0,0,0.3)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
+        <div className="px-8 py-6 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
             Security & Account
           </h2>
         </div>
 
-        <div className="divide-y divide-white/5">
+        <div>
           <SettingsButton
             icon={Lock}
             title="Change Password"
@@ -168,7 +186,7 @@ export default function Settings() {
             description="Manage blocked users"
           />
 
-          <div className="border-t border-white/10" />
+          <div className="border-t" style={{ borderColor: 'var(--border-primary)' }} />
 
           <SettingsButton
             icon={Download}

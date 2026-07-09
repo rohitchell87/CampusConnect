@@ -14,7 +14,9 @@ export default function MobileBottomNav() {
   const location = useLocation()
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-40 block md:hidden border-t border-white/10 bg-[#090909]/95 backdrop-blur-xl px-3 py-3">
+    <div className="fixed bottom-0 left-0 right-0 z-40 block md:hidden border-t backdrop-blur-xl px-3 py-3"
+      style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--surface-glass)' }}
+    >
       <div className="mx-auto flex max-w-3xl items-center justify-between gap-2">
         {navItems.map((item) => {
           const active = location.pathname === item.path
@@ -23,7 +25,8 @@ export default function MobileBottomNav() {
             <Link
               key={item.path}
               to={item.path}
-              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-3xl px-2 py-2 text-xs transition ${active ? 'bg-gradient-to-br from-[#6366F1] to-[#8B5CF6] text-white' : 'bg-[#141414] text-[#B5B5B5] hover:bg-[#1f1f1f]'}`}
+              className={`flex flex-1 flex-col items-center justify-center gap-1 rounded-3xl px-2 py-2 text-xs transition ${active ? 'bg-gradient-to-br from-[var(--accent)] to-[var(--accent-secondary)]' : 'hover:bg-[color:var(--surface-bg)]'}`}
+              style={active ? { color: 'var(--surface-elevated)' } : { color: 'var(--text-secondary)', backgroundColor: 'var(--surface-bg)' }}
             >
               <Icon className="h-5 w-5" />
               <span>{item.label}</span>

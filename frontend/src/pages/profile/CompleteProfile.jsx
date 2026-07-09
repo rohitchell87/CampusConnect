@@ -102,8 +102,8 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
           setIsDragging(false)
         }}
         onDrop={handleDrop}
-        className={`group relative overflow-hidden rounded-[24px] border bg-[#111827]/85 p-6 text-center shadow-[0_20px_45px_rgba(0,0,0,0.22)] transition ${
-          isDragging ? 'border-[#8B5CF6] bg-[#171c31]' : 'border-dashed border-white/15 hover:border-[#8B5CF6] hover:bg-white/5'
+        className={`group relative overflow-hidden rounded-[24px] border bg-[color:var(--surface-bg)]/85 p-6 text-center shadow-[0_20px_45px_rgba(0,0,0,0.22)] transition ${
+          isDragging ? 'border-[color:var(--accent-secondary)] bg-[color:var(--surface-elevated)]' : 'border-dashed border-[color:var(--border-primary)] hover:border-[color:var(--accent-secondary)] hover:bg-[color:var(--surface-elevated)]/70'
         }`}
       >
         <input
@@ -116,9 +116,9 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
 
         {preview ? (
           <>
-            <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-[#0F1425]">
+            <div className="relative aspect-[4/5] overflow-hidden rounded-[20px] bg-[color:var(--surface-elevated)]">
               <img src={preview} alt={label} className="h-full w-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#04070d]/80 via-[#04070d]/10 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
+              <div className="absolute inset-0 bg-gradient-to-t from-[color:var(--bg-primary)]/80 via-[color:var(--bg-primary)]/10 to-transparent opacity-0 transition duration-300 group-hover:opacity-100" />
               <div className="absolute inset-x-0 bottom-0 flex items-center justify-center gap-2 p-3 opacity-0 transition duration-300 group-hover:opacity-100">
                 <button
                   type="button"
@@ -126,7 +126,7 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
                     event.stopPropagation()
                     setViewerOpen(true)
                   }}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0d1428]/90 px-3 py-2 text-xs font-semibold text-white backdrop-blur"
+                  className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 px-3 py-2 text-xs font-semibold text-[color:var(--text-primary)] backdrop-blur"
                 >
                   <Eye className="h-3.5 w-3.5" />
                   Preview
@@ -137,7 +137,7 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
                     event.stopPropagation()
                     openPicker()
                   }}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0d1428]/90 px-3 py-2 text-xs font-semibold text-white backdrop-blur"
+                  className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 px-3 py-2 text-xs font-semibold text-[color:var(--text-primary)] backdrop-blur"
                 >
                   <RefreshCw className="h-3.5 w-3.5" />
                   Replace
@@ -148,7 +148,7 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
                     event.stopPropagation()
                     handleRemove()
                   }}
-                  className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-[#0d1428]/90 px-3 py-2 text-xs font-semibold text-white backdrop-blur"
+                  className="inline-flex items-center gap-2 rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 px-3 py-2 text-xs font-semibold text-[color:var(--text-primary)] backdrop-blur"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
                   Remove
@@ -161,24 +161,24 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
             <motion.div
               animate={isDragging ? { y: [0, -4, 0], scale: [1, 1.03, 1] } : { y: [0, -4, 0], scale: [1, 1.01, 1] }}
               transition={{ duration: 1.4, repeat: Infinity, ease: 'easeInOut' }}
-              className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[#8B5CF6]/25 bg-[#7C5CFF]/10 text-[#A78BFA]"
+              className="flex h-16 w-16 items-center justify-center rounded-3xl border border-[color:var(--accent-secondary)]/25 bg-[color:var(--accent)]/10 text-[color:var(--accent-secondary)]"
             >
               <UploadCloud className="h-8 w-8" />
             </motion.div>
-            <div className="mt-5 text-lg font-semibold text-white">{label}</div>
-            <p className="mt-2 text-sm leading-6 text-[#94A3B8]">{description}</p>
+            <div className="mt-5 text-lg font-semibold text-[color:var(--text-primary)]">{label}</div>
+            <p className="mt-2 text-sm leading-6 text-[color:var(--text-muted)]">{description}</p>
           </div>
         )}
 
         {isUploading && (
-          <div className="mt-4 rounded-2xl border border-white/10 bg-[#0F1425] p-4 text-left">
-            <div className="flex items-center justify-between text-sm text-[#E2E8F0]">
+          <div className="mt-4 rounded-2xl border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] p-4 text-left">
+            <div className="flex items-center justify-between text-sm text-[color:var(--text-secondary)]">
               <span>Uploading...</span>
               <span>{progress}%</span>
             </div>
-            <div className="mt-3 h-2 overflow-hidden rounded-full bg-white/10">
+            <div className="mt-3 h-2 overflow-hidden rounded-full bg-[color:var(--surface-elevated)]">
               <motion.div
-                className="h-full rounded-full bg-gradient-to-r from-[#7C5CFF] to-[#8B5CF6]"
+                className="h-full rounded-full bg-gradient-to-r from-[color:var(--accent)] to-[color:var(--accent-secondary)]"
                 initial={{ width: 0 }}
                 animate={{ width: `${progress}%` }}
                 transition={{ duration: 0.25, ease: 'easeOut' }}
@@ -211,7 +211,7 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-[70] flex items-center justify-center bg-[#04060e]/85 px-3 py-5 backdrop-blur-xl"
+            className="fixed inset-0 z-[70] flex items-center justify-center bg-[color:var(--bg-primary)]/85 px-3 py-5 backdrop-blur-xl"
             onClick={() => setViewerOpen(false)}
           >
             <motion.div
@@ -225,11 +225,11 @@ function PhotoUploadCard({ label, description, uploadType, onUpload }) {
               <button
                 type="button"
                 onClick={() => setViewerOpen(false)}
-                className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/10 bg-[#0d1428]/90 text-white shadow-lg"
+                className="absolute right-3 top-3 z-10 inline-flex h-11 w-11 items-center justify-center rounded-full border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 text-[color:var(--text-primary)] shadow-lg"
               >
                 <X className="h-5 w-5" />
               </button>
-              <div className="overflow-hidden rounded-[28px] border border-white/10 bg-[#090B14] shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
+              <div className="overflow-hidden rounded-[28px] border border-[color:var(--border-primary)] bg-[color:var(--card-bg)] shadow-[0_30px_90px_rgba(0,0,0,0.45)]">
                 <img src={preview} alt={label} className="max-h-[78vh] w-full object-contain" />
               </div>
             </motion.div>
@@ -356,32 +356,32 @@ export default function CompleteProfile() {
           animate="visible"
           custom={0}
           variants={sectionVariants}
-          className="glass-card overflow-hidden border border-white/10 bg-[#0B0F1E]/90 p-8 shadow-glass"
+          className="glass-card overflow-hidden border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 p-8 shadow-glass"
         >
           <div className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
             <div className="max-w-2xl">
-              <p className="text-sm uppercase tracking-[0.28em] text-[#A78BFA]">Complete Your Profile</p>
-              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-white">Complete Your Profile</h1>
-              <p className="mt-3 max-w-2xl text-base leading-7 text-[#CBD5E1]">
+              <p className="text-sm uppercase tracking-[0.28em] text-[color:var(--accent-secondary)]">Complete Your Profile</p>
+              <h1 className="mt-4 text-4xl font-semibold tracking-tight text-[color:var(--text-primary)]">Complete Your Profile</h1>
+              <p className="mt-3 max-w-2xl text-base leading-7 text-[color:var(--text-secondary)]">
                 The more information you add, the better your matches become.
               </p>
             </div>
-            <div className="rounded-3xl border border-white/10 bg-white/5 px-5 py-4 text-right text-sm text-[#E2E8F0] shadow-sm backdrop-blur-sm">
-              <div className="text-3xl font-semibold text-white">{completionPercent}%</div>
-              <div className="mt-1 text-xs uppercase tracking-[0.25em] text-[#A78BFA]">Completion</div>
+            <div className="rounded-3xl border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] px-5 py-4 text-right text-sm text-[color:var(--text-secondary)] shadow-sm backdrop-blur-sm">
+              <div className="text-3xl font-semibold text-[color:var(--text-primary)]">{completionPercent}%</div>
+              <div className="mt-1 text-xs uppercase tracking-[0.25em] text-[color:var(--accent-secondary)]">Completion</div>
             </div>
           </div>
 
           <div className="mt-10 grid gap-6 lg:grid-cols-[1.3fr_auto] lg:items-start lg:gap-8">
-            <div className="rounded-[24px] border border-white/10 bg-[#111827]/80 p-6 shadow-[0_28px_70px_-32px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+            <div className="rounded-[24px] border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] p-6 shadow-[0_28px_70px_-32px_rgba(0,0,0,0.45)] backdrop-blur-xl">
               <div className="mb-4 flex items-center justify-between gap-4">
-                <span className="text-sm font-semibold uppercase tracking-[0.24em] text-[#A78BFA]">Checklist</span>
-                <span className="rounded-full bg-[#161B2A] px-3 py-1 text-xs text-[#D8D4FF]">{completionCount} of 5 done</span>
+                <span className="text-sm font-semibold uppercase tracking-[0.24em] text-[color:var(--accent-secondary)]">Checklist</span>
+                <span className="rounded-full bg-[color:var(--surface-elevated)] px-3 py-1 text-xs text-[color:var(--text-secondary)]">{completionCount} of 5 done</span>
               </div>
               <div className="space-y-3">
                 {completionChecklist.map((item) => (
-                  <div key={item.label} className="flex items-center gap-4 rounded-3xl bg-white/5 px-4 py-3 text-sm text-[#E2E8F0] transition hover:bg-white/10">
-                    <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${item.done ? 'bg-[#7C5CFF]' : 'bg-white/5'} text-sm font-semibold text-white`}>
+                  <div key={item.label} className="flex items-center gap-4 rounded-3xl bg-[color:var(--surface-elevated)]/70 px-4 py-3 text-sm text-[color:var(--text-secondary)] transition hover:bg-[color:var(--surface-elevated)]">
+                    <span className={`inline-flex h-9 w-9 items-center justify-center rounded-full ${item.done ? 'bg-[color:var(--accent)]' : 'bg-[color:var(--surface-bg)]'} text-sm font-semibold text-[color:var(--surface-elevated)]`}>
                       {item.done ? '✓' : '○'}
                     </span>
                     <span>{item.label}</span>
@@ -390,12 +390,12 @@ export default function CompleteProfile() {
               </div>
             </div>
 
-            <div className="rounded-[24px] border border-white/10 bg-[#111827]/80 p-6 shadow-[0_28px_70px_-32px_rgba(0,0,0,0.45)] backdrop-blur-xl">
-              <div className="mb-3 text-sm uppercase tracking-[0.25em] text-[#A78BFA]">Profile progress</div>
-              <div className="h-3 overflow-hidden rounded-full bg-white/10">
-                <div className="h-full rounded-full bg-gradient-to-r from-[#6366F1] to-[#8B5CF6]" style={{ width: `${completionPercent}%` }} />
+            <div className="rounded-[24px] border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] p-6 shadow-[0_28px_70px_-32px_rgba(0,0,0,0.45)] backdrop-blur-xl">
+              <div className="mb-3 text-sm uppercase tracking-[0.25em] text-[color:var(--accent-secondary)]">Profile progress</div>
+              <div className="h-3 overflow-hidden rounded-full bg-[color:var(--surface-elevated)]">
+                <div className="h-full rounded-full bg-gradient-to-r from-[color:var(--accent-primary)] to-[color:var(--accent-secondary)]" style={{ width: `${completionPercent}%` }} />
               </div>
-              <div className="mt-3 text-sm text-[#94A3B8]">
+              <div className="mt-3 text-sm text-[color:var(--text-muted)]">
                 Fill in the essentials and keep your profile polished for better matches.
               </div>
             </div>
@@ -408,43 +408,43 @@ export default function CompleteProfile() {
             animate="visible"
             custom={0.1}
             variants={sectionVariants}
-            className="glass-card border border-white/10 bg-[#0B0F1E]/90 p-8 shadow-glass"
+            className="glass-card border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 p-8 shadow-glass"
           >
             <div className="mb-6 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
               <div>
                 <p className="section-title">👤 Basic Information</p>
-                <h2 className="mt-3 text-2xl font-semibold text-white">Your essential details</h2>
+                <h2 className="mt-3 text-2xl font-semibold text-[color:var(--text-primary)]">Your essential details</h2>
               </div>
-              <p className="max-w-xl text-sm leading-6 text-[#C4C7D1]">A clean profile helps you show up in more great matches.</p>
+              <p className="max-w-xl text-sm leading-6 text-[color:var(--text-secondary)]">A clean profile helps you show up in more great matches.</p>
             </div>
 
             <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Full Name</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Full Name</label>
                 <input {...register('fullName')} required className="input-glass w-full" />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">College</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">College</label>
                 <input {...register('college')} className="input-glass w-full" />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Hometown</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Hometown</label>
                 <input {...register('hometown')} className="input-glass w-full" />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Branch</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Branch</label>
                 <input {...register('branch')} className="input-glass w-full" />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Year</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Year</label>
                 <input type="number" {...register('year')} className="input-glass w-full" />
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Age</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Age</label>
                 <input type="number" {...register('age')} className="input-glass w-full" />
               </div>
               <div className="sm:col-span-2 xl:col-span-1">
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Height</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Height</label>
                 <input type="number" {...register('height')} className="input-glass w-full" />
               </div>
             </div>
@@ -455,20 +455,20 @@ export default function CompleteProfile() {
             animate="visible"
             custom={0.2}
             variants={sectionVariants}
-            className="glass-card border border-white/10 bg-[#0B0F1E]/90 p-8 shadow-glass"
+            className="glass-card border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 p-8 shadow-glass"
           >
             <div className="mb-6">
               <p className="section-title">✨ About You</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">Tell your story</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--text-primary)]">Tell your story</h2>
             </div>
             <div className="mb-3 flex items-center justify-between gap-3">
-              <label className="block text-sm font-medium text-[#D8D4FF]">Bio</label>
+              <label className="block text-sm font-medium text-[color:var(--text-secondary)]">Bio</label>
               <button
                 type="button"
                 onClick={() => setAssistantOpen(true)}
-                className="inline-flex items-center gap-2 rounded-full border border-[#7C5CFF]/20 bg-[#0F1326]/90 px-3 py-2 text-xs font-semibold text-[#EDE8FF] shadow-[0_8px_24px_rgba(124,92,255,0.12)] transition hover:-translate-y-0.5 hover:border-[#7C5CFF]/50 hover:shadow-[0_0_0_1px_rgba(124,92,255,0.15)]"
+                className="inline-flex items-center gap-2 rounded-full border border-[color:var(--accent-secondary)]/20 bg-[color:var(--surface-bg)] px-3 py-2 text-xs font-semibold text-[color:var(--text-primary)] shadow-[0_8px_24px_rgba(124,92,255,0.12)] transition hover:-translate-y-0.5 hover:border-[color:var(--accent-secondary)]/50 hover:shadow-[0_0_0_1px_rgba(124,92,255,0.15)]"
               >
-                <Sparkles className="h-3.5 w-3.5 text-[#A78BFA]" />
+                <Sparkles className="h-3.5 w-3.5 text-[color:var(--accent-secondary)]" />
                 ✨ Improve with AI
               </button>
             </div>
@@ -485,16 +485,16 @@ export default function CompleteProfile() {
             animate="visible"
             custom={0.3}
             variants={sectionVariants}
-            className="glass-card border border-white/10 bg-[#0B0F1E]/90 p-8 shadow-glass"
+            className="glass-card border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 p-8 shadow-glass"
           >
             <div className="mb-6">
               <p className="section-title">💜 Lifestyle</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">How you live and connect</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--text-primary)]">How you live and connect</h2>
             </div>
 
             <div className="grid gap-5 md:grid-cols-3">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Gender</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Gender</label>
                 <select {...register('gender')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="MALE">Male</option>
@@ -503,7 +503,7 @@ export default function CompleteProfile() {
                 </select>
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Interested In</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Interested In</label>
                 <select {...register('interestedIn')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="MEN">Men</option>
@@ -512,7 +512,7 @@ export default function CompleteProfile() {
                 </select>
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Looking For</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Looking For</label>
                 <select {...register('lookingFor')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="DATING">Dating</option>
@@ -527,7 +527,7 @@ export default function CompleteProfile() {
 
             <div className="mt-6 grid gap-5 grid-cols-1 md:grid-cols-3 xl:grid-cols-4">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Workout Habit</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Workout Habit</label>
                 <select {...register('workoutHabit')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="DAILY">Daily</option>
@@ -537,7 +537,7 @@ export default function CompleteProfile() {
                 </select>
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Smoking Habit</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Smoking Habit</label>
                 <select {...register('smokingHabit')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="NO">No</option>
@@ -546,7 +546,7 @@ export default function CompleteProfile() {
                 </select>
               </div>
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Drinking Habit</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Drinking Habit</label>
                 <select {...register('drinkingHabit')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="NO">No</option>
@@ -558,7 +558,7 @@ export default function CompleteProfile() {
 
             <div className="mt-6 grid gap-5 grid-cols-1 md:grid-cols-2">
               <div>
-                <label className="mb-2 block text-sm font-medium text-[#D8D4FF]">Personality</label>
+                <label className="mb-2 block text-sm font-medium text-[color:var(--text-secondary)]">Personality</label>
                 <select {...register('personalityType')} className="input-glass w-full appearance-none">
                   <option value="">Select</option>
                   <option value="INTROVERT">Introvert</option>
@@ -574,11 +574,11 @@ export default function CompleteProfile() {
             animate="visible"
             custom={0.4}
             variants={sectionVariants}
-            className="glass-card border border-white/10 bg-[#0B0F1E]/90 p-8 shadow-glass"
+            className="glass-card border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 p-8 shadow-glass"
           >
             <div className="mb-6">
               <p className="section-title">🎯 Interests</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">Choose what makes you unique</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--text-primary)]">Choose what makes you unique</h2>
             </div>
             <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               {interests.map((interest) => {
@@ -590,8 +590,8 @@ export default function CompleteProfile() {
                     onClick={() => onToggleInterest(interest.id)}
                     className={`inline-flex items-center gap-2 rounded-full px-4 py-3 text-sm font-semibold transition ${
                       active
-                        ? 'bg-[#7C5CFF] text-white shadow-glow'
-                        : 'border border-white/10 bg-[#111827]/85 text-[#D8D4FF] hover:border-[#8B5CF6] hover:bg-white/5'
+                        ? 'bg-[color:var(--accent)] text-[color:var(--surface-elevated)] shadow-glow'
+                        : 'border border-[color:var(--border-primary)] bg-[color:var(--surface-bg)] text-[color:var(--text-secondary)] hover:border-[color:var(--accent-secondary)] hover:bg-[color:var(--surface-elevated)]/70'
                     }`}
                   >
                     <span>{interest.icon}</span>
@@ -607,11 +607,11 @@ export default function CompleteProfile() {
             animate="visible"
             custom={0.5}
             variants={sectionVariants}
-            className="glass-card border border-white/10 bg-[#0B0F1E]/90 p-8 shadow-glass"
+            className="glass-card border border-[color:var(--border-primary)] bg-[color:var(--surface-elevated)]/90 p-8 shadow-glass"
           >
             <div className="mb-6">
               <p className="section-title">📷 Photos</p>
-              <h2 className="mt-3 text-2xl font-semibold text-white">Add your profile visuals</h2>
+              <h2 className="mt-3 text-2xl font-semibold text-[color:var(--text-primary)]">Add your profile visuals</h2>
             </div>
             <div className="grid gap-5 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
               <PhotoUploadCard

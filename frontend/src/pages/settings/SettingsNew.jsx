@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { Mail, Lock, Bell, Moon, Eye, Shield, Download, Trash2, BadgeCheck } from 'lucide-react'
 import { useNavigate } from 'react-router-dom'
+import { useTheme } from '../../context/ThemeContext'
 import VerificationModal from '../../components/verification/VerificationModal'
 import { subscribeToVerificationChanges, getVerificationStatus } from '../../components/verification/VerificationService'
 import settingsService from '../../services/settingsService'
@@ -8,8 +9,8 @@ import toast from 'react-hot-toast'
 
 export default function SettingsNew() {
   const navigate = useNavigate()
+  const { theme, toggleTheme } = useTheme()
   const [preferences, setPreferences] = useState({
-    darkMode: true,
     pushNotifications: true,
     emailNotifications: true,
     showOnlineStatus: false,
@@ -30,7 +31,6 @@ export default function SettingsNew() {
         const settings = await settingsService.getSettings()
         setPreferences((prev) => ({
           ...prev,
-          darkMode: settings.darkMode ?? prev.darkMode,
           pushNotifications: settings.pushNotifications ?? prev.pushNotifications,
           emailNotifications: settings.emailNotifications ?? prev.emailNotifications,
           showOnlineStatus: settings.showOnlineStatus ?? prev.showOnlineStatus,
@@ -46,6 +46,9 @@ export default function SettingsNew() {
   }, [])
 
   const togglePreference = async (key) => {
+    // Dark mode is handled by ThemeContext, not here
+    if (key === 'darkMode') return
+
     const nextValue = !preferences[key]
     setPreferences((prev) => ({ ...prev, [key]: nextValue }))
 
@@ -61,29 +64,35 @@ export default function SettingsNew() {
   const ToggleSwitch = ({ enabled, onChange }) => (
     <button
       onClick={onChange}
-      className={`relative h-6 w-11 rounded-full transition-all flex-shrink-0 ${
-        enabled ? 'bg-[#9B6DFF]' : 'bg-white/10'
-      }`}
+      className={`relative h-6 w-11 rounded-full transition-all flex-shrink-0`}
+      style={{
+        backgroundColor: enabled ? 'var(--accent-secondary)' : 'var(--border-primary)',
+      }}
     >
       <div
-        className={`absolute top-0.5 h-5 w-5 rounded-full bg-white transition-transform ${
+        className={`absolute top-0.5 h-5 w-5 rounded-full transition-transform ${
           enabled ? 'translate-x-5' : 'translate-x-0.5'
         }`}
+        style={{ backgroundColor: 'var(--card-bg)' }}
       />
     </button>
   )
 
   const SettingsRow = ({ icon: Icon, title, description, control }) => (
-    <div className="flex items-center justify-between gap-6 py-4 px-6 hover:bg-white/[0.03] transition-colors cursor-pointer min-h-[72px]">
+    <div className="flex items-center justify-between gap-6 py-4 px-6 transition-colors cursor-pointer min-h-[72px]"
+      style={{ backgroundColor: 'transparent', borderBottom: '1px solid var(--border-primary)' }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-bg)')}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+    >
       <div className="flex items-start gap-4 flex-1">
-        <div className="flex-shrink-0 text-[#9B6DFF] mt-1">
+        <div className="flex-shrink-0 mt-1" style={{ color: 'var(--accent-secondary)' }}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="space-y-1 flex-1">
-          <h3 className="text-sm font-medium text-white">
+          <h3 className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>
             {title}
           </h3>
-          <p className="text-xs text-[#8B8B9F]">
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             {description}
           </p>
         </div>
@@ -95,21 +104,28 @@ export default function SettingsNew() {
   )
 
   const SettingsButton = ({ icon: Icon, title, description, isDestructive = false }) => (
-    <button className={`w-full flex items-center justify-between gap-6 py-4 px-6 hover:bg-white/[0.03] transition-colors min-h-[72px] group border-b border-white/5 last:border-b-0`}>
+    <button className={`w-full flex items-center justify-between gap-6 py-4 px-6 transition-colors min-h-[72px] group border-b last:border-b-0`}
+      style={{ backgroundColor: 'transparent', borderColor: 'var(--border-primary)' }}
+      onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-bg)')}
+      onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+    >
       <div className="flex items-start gap-4 flex-1">
-        <div className={`flex-shrink-0 mt-1 ${isDestructive ? 'text-red-500' : 'text-[#9B6DFF]'}`}>
+        <div className={`flex-shrink-0 mt-1`} style={{ color: isDestructive ? 'var(--danger)' : 'var(--accent-secondary)' }}>
           <Icon className="h-5 w-5" />
         </div>
         <div className="space-y-1 text-left flex-1">
-          <h3 className={`text-sm font-medium ${isDestructive ? 'text-red-500' : 'text-white'}`}>
+          <h3 className="text-sm font-medium" style={{ color: isDestructive ? 'var(--danger)' : 'var(--text-primary)' }}>
             {title}
           </h3>
-          <p className="text-xs text-[#8B8B9F]">
+          <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>
             {description}
           </p>
         </div>
       </div>
-      <span className={`flex-shrink-0 text-lg ${isDestructive ? 'text-red-500 group-hover:text-red-400' : 'text-[#8B8B9F] group-hover:text-white'} transition-colors`}>
+      <span className="flex-shrink-0 text-lg transition-colors" style={{ color: isDestructive ? 'var(--danger)' : 'var(--text-secondary)' }}
+        onMouseEnter={(e) => { if (!isDestructive) e.currentTarget.style.color = 'var(--text-primary)' }}
+        onMouseLeave={(e) => { if (!isDestructive) e.currentTarget.style.color = 'var(--text-secondary)' }}
+      >
         →
       </span>
     </button>
@@ -119,31 +135,34 @@ export default function SettingsNew() {
     <div className="space-y-10">
       {/* Header */}
       <div>
-        <p className="text-sm uppercase tracking-[0.3em] text-[#8B5CF6] mb-2">
+        <p className="text-sm uppercase tracking-[0.3em] mb-2" style={{ color: 'var(--accent-secondary)' }}>
           Account
         </p>
-        <h1 className="text-4xl font-bold text-white">
+        <h1 className="text-4xl font-bold" style={{ color: 'var(--text-primary)' }}>
           Settings
         </h1>
       </div>
 
       {/* Preferences Card */}
-      <div className="rounded-3xl border border-white/10 bg-[#141414] shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
-        <div className="px-8 py-6 border-b border-white/5">
-          <h2 className="text-lg font-bold text-white">
+      <div className="rounded-3xl border shadow-[0_30px_60px_rgba(0,0,0,0.3)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
+        <div className="px-8 py-6 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
             Preferences
           </h2>
         </div>
 
-        <div className="divide-y divide-white/5">
+        <div>
           <SettingsRow
             icon={Moon}
             title="Dark Mode"
             description="Use the dark appearance"
             control={
               <ToggleSwitch
-                enabled={preferences.darkMode}
-                onChange={() => !loadingSettings && togglePreference('darkMode')}
+                enabled={theme === 'dark'}
+                onChange={() => {
+                  if (loadingSettings) return
+                  toggleTheme()
+                }}
               />
             }
           />
@@ -186,45 +205,54 @@ export default function SettingsNew() {
         </div>
       </div>
 
-      <div className="rounded-3xl border border-white/10 bg-[#141414] shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
-        <div className="px-8 py-6 border-b border-white/5">
+      <div className="rounded-3xl border shadow-[0_30px_60px_rgba(0,0,0,0.3)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
+        <div className="px-8 py-6 border-b" style={{ borderColor: 'var(--border-primary)' }}>
           <div className="flex items-center justify-between gap-4">
             <div>
-              <h2 className="text-lg font-bold text-white">Student verification</h2>
-              <p className="mt-1 text-sm text-[#8B8B9F]">Show campus authenticity with a mock student verification badge.</p>
+              <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>Student verification</h2>
+              <p className="mt-1 text-sm" style={{ color: 'var(--text-secondary)' }}>Show campus authenticity with a mock student verification badge.</p>
             </div>
-            <button type="button" onClick={() => setVerificationOpen(true)} className="inline-flex items-center gap-2 rounded-full border border-[#2563EB]/30 bg-[#2563EB]/12 px-4 py-2 text-sm font-semibold text-[#DBEAFE] transition hover:bg-[#2563EB]/20">
+            <button type="button" onClick={() => setVerificationOpen(true)} className="inline-flex items-center gap-2 rounded-full border transition" style={{ borderColor: 'var(--accent-secondary)/30', backgroundColor: 'var(--accent-secondary)/12', color: 'var(--accent-secondary)', padding: '0.5rem 1rem', fontSize: '0.875rem', fontWeight: '600' }}
+              onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--accent-secondary)/20')}
+              onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'var(--accent-secondary)/12')}
+            >
               <BadgeCheck className="h-4 w-4" />
               {verificationStatus}
             </button>
           </div>
         </div>
 
-        <div className="divide-y divide-white/5">
-          <button type="button" onClick={() => setVerificationOpen(true)} className="w-full flex items-center justify-between gap-6 py-4 px-6 hover:bg-white/[0.03] transition-colors min-h-[72px] group border-b border-white/5 last:border-b-0">
+        <div>
+          <button type="button" onClick={() => setVerificationOpen(true)} className="w-full flex items-center justify-between gap-6 py-4 px-6 transition-colors min-h-[72px] group border-b last:border-b-0" style={{ backgroundColor: 'transparent', borderColor: 'var(--border-primary)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-bg)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
+          >
             <div className="flex items-start gap-4 flex-1">
-              <div className="flex-shrink-0 mt-1 text-[#9B6DFF]">
+              <div className="flex-shrink-0 mt-1" style={{ color: 'var(--accent-secondary)' }}>
                 <Shield className="h-5 w-5" />
               </div>
               <div className="space-y-1 text-left flex-1">
-                <h3 className="text-sm font-medium text-white">Student Verification</h3>
-                <p className="text-xs text-[#8B8B9F]">Open the multip-step verification flow and preview your badge.</p>
+                <h3 className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Student Verification</h3>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Open the multip-step verification flow and preview your badge.</p>
               </div>
             </div>
-            <span className="flex-shrink-0 text-lg text-[#8B8B9F] group-hover:text-white transition-colors">→</span>
+            <span className="flex-shrink-0 text-lg transition-colors" style={{ color: 'var(--text-secondary)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+            >→</span>
           </button>
         </div>
       </div>
 
       {/* Security & Account Card */}
-      <div className="rounded-3xl border border-white/10 bg-[#141414] shadow-[0_30px_60px_rgba(0,0,0,0.3)]">
-        <div className="px-8 py-6 border-b border-white/5">
-          <h2 className="text-lg font-bold text-white">
+      <div className="rounded-3xl border shadow-[0_30px_60px_rgba(0,0,0,0.3)]" style={{ borderColor: 'var(--border-primary)', backgroundColor: 'var(--card-bg)' }}>
+        <div className="px-8 py-6 border-b" style={{ borderColor: 'var(--border-primary)' }}>
+          <h2 className="text-lg font-bold" style={{ color: 'var(--text-primary)' }}>
             Security & Account
           </h2>
         </div>
 
-        <div className="divide-y divide-white/5">
+        <div>
           <SettingsButton
             icon={Lock}
             title="Change Password"
@@ -240,21 +268,27 @@ export default function SettingsNew() {
           <button
             type="button"
             onClick={() => navigate('/settings/blocked-users')}
-            className="w-full flex items-center justify-between gap-6 py-4 px-6 hover:bg-white/[0.03] transition-colors min-h-[72px] group border-b border-white/5 last:border-b-0"
+            className="w-full flex items-center justify-between gap-6 py-4 px-6 transition-colors min-h-[72px] group border-b last:border-b-0"
+            style={{ backgroundColor: 'transparent', borderColor: 'var(--border-primary)' }}
+            onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = 'var(--surface-bg)')}
+            onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = 'transparent')}
           >
             <div className="flex items-start gap-4 flex-1">
-              <div className="flex-shrink-0 mt-1 text-[#9B6DFF]">
+              <div className="flex-shrink-0 mt-1" style={{ color: 'var(--accent-secondary)' }}>
                 <Eye className="h-5 w-5" />
               </div>
               <div className="space-y-1 text-left flex-1">
-                <h3 className="text-sm font-medium text-white">Blocked Users</h3>
-                <p className="text-xs text-[#8B8B9F]">Manage blocked users</p>
+                <h3 className="text-sm font-medium" style={{ color: 'var(--text-primary)' }}>Blocked Users</h3>
+                <p className="text-xs" style={{ color: 'var(--text-secondary)' }}>Manage blocked users</p>
               </div>
             </div>
-            <span className="flex-shrink-0 text-lg text-[#8B8B9F] group-hover:text-white transition-colors">→</span>
+            <span className="flex-shrink-0 text-lg transition-colors" style={{ color: 'var(--text-secondary)' }}
+              onMouseEnter={(e) => (e.currentTarget.style.color = 'var(--text-primary)')}
+              onMouseLeave={(e) => (e.currentTarget.style.color = 'var(--text-secondary)')}
+            >→</span>
           </button>
 
-          <div className="border-t border-white/10" />
+          <div style={{ borderTop: '1px solid var(--border-primary)' }} />
 
           <SettingsButton
             icon={Download}
