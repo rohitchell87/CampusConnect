@@ -1,0 +1,21 @@
+# Build output
+frontend/dist/
+backend/target/
+
+# Archives
+*.zip
+
+# Logs
+*.log
+
+# Environment variables
+.env
+.env.*
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
