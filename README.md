@@ -193,18 +193,10 @@ CampusConnect
 
 ---
 
-## Home Feed
+## Settings
 
 <p align="center">
-<img src="screenshots/feed.png" width="800">
-</p>
-
----
-
-## Profile
-
-<p align="center">
-<img src="screenshots/profile.png" width="800">
+<img src="screenshots/settings.png" width="800">
 </p>
 
 ---
